@@ -1,0 +1,75 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PAYROLL.
+       AUTHOR. YOUR-NAME.
+       
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT EMPLOYEE-FILE ASSIGN TO "data/employees.dat"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS RANDOM
+               RECORD KEY IS EMPLOYEE-ID
+               FILE STATUS IS EMPLOYEE-STATUS.
+
+           SELECT SALARY-FILE ASSIGN TO "data/salary_records.dat"
+               ORGANIZATION IS SEQUENTIAL.
+       
+       DATA DIVISION.
+       FILE SECTION.
+       
+       FD EMPLOYEE-FILE.
+       01 EMPLOYEE-RECORD.
+           05 EMPLOYEE-ID           PIC X(5).
+           05 EMPLOYEE-NAME         PIC X(30).
+           05 BASIC-SALARY          PIC 9(7)V99.
+           05 HOURS-WORKED          PIC 9(3)V99.
+           05 OVERTIME-HOURS        PIC 9(3)V99.
+           05 LEAVE-DEDUCTIONS      PIC 9(5)V99.
+           05 TAX-RATE              PIC 9(2)V99.
+           05 BENEFITS              PIC 9(5)V99.
+
+       FD SALARY-FILE.
+       01 SALARY-RECORD.
+           05 EMPLOYEE-ID           PIC X(5).
+           05 GROSS-SALARY         PIC 9(7)V99.
+           05 TAX-DEDUCTED         PIC 9(6)V99.
+           05 NET-SALARY           PIC 9(7)V99.
+
+       WORKING-STORAGE SECTION.
+       01 EMPLOYEE-STATUS          PIC 9(2).
+       01 GROSS-SALARY             PIC 9(7)V99.
+       01 TAX-DEDUCTED             PIC 9(6)V99.
+       01 NET-SALARY               PIC 9(7)V99.
+
+       PROCEDURE DIVISION.
+       MAIN-PROCESS.
+           OPEN INPUT EMPLOYEE-FILE.
+           OPEN OUTPUT SALARY-FILE.
+
+           PERFORM PROCESS-EMPLOYEES UNTIL EMPLOYEE-STATUS = 10.
+
+           CLOSE EMPLOYEE-FILE.
+           CLOSE SALARY-FILE.
+           STOP RUN.
+       
+       PROCESS-EMPLOYEES.
+           READ EMPLOYEE-FILE NEXT RECORD 
+               AT END MOVE 10 TO EMPLOYEE-STATUS.
+           
+           IF EMPLOYEE-STATUS NOT = 10 THEN
+               PERFORM CALCULATE-SALARY
+               PERFORM STORE-SALARY.
+       
+       CALCULATE-SALARY.
+           COMPUTE GROSS-SALARY = BASIC-SALARY + (OVERTIME-HOURS * 100).
+           COMPUTE TAX-DEDUCTED = (GROSS-SALARY * TAX-RATE) / 100.
+           COMPUTE NET-SALARY = GROSS-SALARY - TAX-DEDUCTED - LEAVE-DEDUCTIONS + BENEFITS.
+       
+       STORE-SALARY.
+           MOVE EMPLOYEE-ID TO SALARY-RECORD.
+           MOVE GROSS-SALARY TO SALARY-RECORD.
+           MOVE TAX-DEDUCTED TO SALARY-RECORD.
+           MOVE NET-SALARY TO SALARY-RECORD.
+           WRITE SALARY-RECORD.
+       
+       END PROGRAM PAYROLL.
