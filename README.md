@@ -21,32 +21,32 @@ The **Payroll Processing System** is a COBOL-based application designed to autom
 ## Software Development Lifecycle (SDLC) Implementation
 The project follows the **Software Development Lifecycle (SDLC)** to ensure a structured and efficient development process:
 
-1. **Requirement Analysis**:
+1. **Requirement Analysis**
    - Gather payroll processing requirements.
    - Define tax deduction rules and benefit calculations.
    - Identify data storage needs.
 
-2. **System Design**:
+2. **System Design**
    - Design the architecture for payroll processing.
    - Define data structures for employee records and payroll transactions.
    - Plan file handling and database structure.
 
-3. **Implementation**:
+3. **Implementation**
    - Develop COBOL modules for salary calculation, deductions, and payslip generation.
    - Implement file handling mechanisms (Sequential, ISAM, VSAM).
    - Integrate with DB2/PostgreSQL if database storage is used.
 
-4. **Testing**:
+4. **Testing**
    - Perform unit testing for salary computation and tax deductions.
    - Conduct integration testing with file handling and database operations.
    - Execute user acceptance testing (UAT) to validate system functionality.
 
-5. **Deployment**:
+5. **Deployment**
    - Set up the production environment.
    - Load initial employee data into the system.
    - Train users on system operations.
 
-6. **Maintenance & Updates**:
+6. **Maintenance & Updates**
    - Monitor system performance.
    - Apply updates for tax regulation changes.
    - Fix bugs and enhance features based on feedback.
@@ -90,30 +90,31 @@ The project follows the **Software Development Lifecycle (SDLC)** to ensure a st
 ## License
 This project is licensed under the MIT License.
 
-## Payroll-Processing-System/
+## Project Structure
+```
+Payroll-Processing-System/
 │── src/                           # Source code folder
 │   ├── payroll.cbl                # Main COBOL program
-│   ├── employee.cbl                # Employee record management module
-│   ├── tax_calculation.cbl         # Tax deduction and benefits calculation
-│   ├── payslip_generator.cbl       # Payslip generation module
-│   ├── leave_deductions.cbl        # Leave deduction module
-│   ├── db_interaction.cbl          # Database interaction (if applicable)
-│── data/                           # Data storage folder
-│   ├── employees.dat               # Employee data file (Sequential/Indexed)
-│   ├── salary_records.dat          # Salary history data file
-│   ├── tax_rates.dat               # Tax and benefits rates
-│── tests/                          # Testing folder
-│   ├── test_payroll.cbl            # Test cases for payroll calculations
-│   ├── test_taxes.cbl              # Test cases for tax calculations
-│── docs/                           # Documentation folder
-│   ├── README.md                   # Project overview and installation guide
-│   ├── design_doc.pdf              # System design document
-│   ├── user_manual.pdf             # User guide for payroll processing
-│── scripts/                        # Utility scripts folder
-│   ├── compile.sh                  # Shell script to compile all COBOL files
-│   ├── run_tests.sh                # Shell script to run test cases
-│── .gitignore                       # Git ignore file
-│── payroll_processing_system.cpy    # Copybook for common record structures
-│── LICENSE                          # License file
-│── README.md                        # Project README
-
+│   ├── employee.cbl               # Employee record management module
+│   ├── tax_calculation.cbl        # Tax deduction and benefits calculation
+│   ├── payslip_generator.cbl      # Payslip generation module
+│   ├── leave_deductions.cbl       # Leave deduction module
+│   ├── db_interaction.cbl         # Database interaction (if applicable)
+│── data/                          # Data storage folder
+│   ├── employees.dat              # Employee data file (Sequential/Indexed)
+│   ├── salary_records.dat         # Salary history data file
+│   ├── tax_rates.dat              # Tax and benefits rates
+│── tests/                         # Testing folder
+│   ├── test_payroll.cbl           # Test cases for payroll calculations
+│   ├── test_taxes.cbl             # Test cases for tax calculations
+│── docs/                          # Documentation folder
+│   ├── README.md                  # Project overview and installation guide
+│   ├── design_doc.pdf             # System design document
+│   ├── user_manual.pdf            # User guide for payroll processing
+│── scripts/                       # Utility scripts folder
+│   ├── compile.sh                 # Shell script to compile all COBOL files
+│   ├── run_tests.sh               # Shell script to run test cases
+│── .gitignore                      # Git ignore file
+│── payroll_processing_system.cpy   # Copybook for common record structures
+│── LICENSE                         # License file
+│── README.md                       # Project README
