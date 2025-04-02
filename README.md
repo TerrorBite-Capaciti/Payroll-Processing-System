@@ -90,4 +90,30 @@ The project follows the **Software Development Lifecycle (SDLC)** to ensure a st
 ## License
 This project is licensed under the MIT License.
 
+## Payroll-Processing-System/
+│── src/                           # Source code folder
+│   ├── payroll.cbl                # Main COBOL program
+│   ├── employee.cbl                # Employee record management module
+│   ├── tax_calculation.cbl         # Tax deduction and benefits calculation
+│   ├── payslip_generator.cbl       # Payslip generation module
+│   ├── leave_deductions.cbl        # Leave deduction module
+│   ├── db_interaction.cbl          # Database interaction (if applicable)
+│── data/                           # Data storage folder
+│   ├── employees.dat               # Employee data file (Sequential/Indexed)
+│   ├── salary_records.dat          # Salary history data file
+│   ├── tax_rates.dat               # Tax and benefits rates
+│── tests/                          # Testing folder
+│   ├── test_payroll.cbl            # Test cases for payroll calculations
+│   ├── test_taxes.cbl              # Test cases for tax calculations
+│── docs/                           # Documentation folder
+│   ├── README.md                   # Project overview and installation guide
+│   ├── design_doc.pdf              # System design document
+│   ├── user_manual.pdf             # User guide for payroll processing
+│── scripts/                        # Utility scripts folder
+│   ├── compile.sh                  # Shell script to compile all COBOL files
+│   ├── run_tests.sh                # Shell script to run test cases
+│── .gitignore                       # Git ignore file
+│── payroll_processing_system.cpy    # Copybook for common record structures
+│── LICENSE                          # License file
+│── README.md                        # Project README
 
