@@ -6,13 +6,10 @@
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            SELECT EMPLOYEE-FILE ASSIGN TO "data/employees.dat"
-               ORGANIZATION IS INDEXED
-               ACCESS MODE IS RANDOM
-               RECORD KEY IS EMPLOYEE-ID
-               FILE STATUS IS EMPLOYEE-STATUS.
+               ORGANIZATION IS LINE SEQUENTIAL.
 
            SELECT SALARY-FILE ASSIGN TO "data/salary_records.dat"
-               ORGANIZATION IS SEQUENTIAL.
+               ORGANIZATION IS LINE SEQUENTIAL.
        
        DATA DIVISION.
        FILE SECTION.
@@ -26,50 +23,54 @@
            05 OVERTIME-HOURS        PIC 9(3)V99.
            05 LEAVE-DEDUCTIONS      PIC 9(5)V99.
            05 TAX-RATE              PIC 9(2)V99.
-           05 BENEFITS              PIC 9(5)V99.
+           05 BENEFITS             PIC 9(5)V99.
 
        FD SALARY-FILE.
        01 SALARY-RECORD.
-           05 EMPLOYEE-ID           PIC X(5).
-           05 GROSS-SALARY         PIC 9(7)V99.
-           05 TAX-DEDUCTED         PIC 9(6)V99.
-           05 NET-SALARY           PIC 9(7)V99.
+           05 SALARY-EMPLOYEE-ID    PIC X(5).
+           05 GROSS-SALARY          PIC 9(7)V99.
+           05 TAX-DEDUCTED          PIC 9(6)V99.
+           05 NET-SALARY            PIC 9(7)V99.
 
        WORKING-STORAGE SECTION.
-       01 EMPLOYEE-STATUS          PIC 9(2).
-       01 GROSS-SALARY             PIC 9(7)V99.
-       01 TAX-DEDUCTED             PIC 9(6)V99.
-       01 NET-SALARY               PIC 9(7)V99.
+       01 EOF-FLAG                 PIC X VALUE 'N'.
+          88 EOF                   VALUE 'Y'.
+       01 TEMP-GROSS-SALARY        PIC 9(7)V99.
+       01 TEMP-TAX-DEDUCTED        PIC 9(6)V99.
+       01 TEMP-NET-SALARY          PIC 9(7)V99.
 
        PROCEDURE DIVISION.
        MAIN-PROCESS.
            OPEN INPUT EMPLOYEE-FILE.
            OPEN OUTPUT SALARY-FILE.
 
-           PERFORM PROCESS-EMPLOYEES UNTIL EMPLOYEE-STATUS = 10.
+           PERFORM PROCESS-EMPLOYEES UNTIL EOF.
 
            CLOSE EMPLOYEE-FILE.
            CLOSE SALARY-FILE.
            STOP RUN.
        
-       PROCESS-EMPLOYEES.
-           READ EMPLOYEE-FILE NEXT RECORD 
-               AT END MOVE 10 TO EMPLOYEE-STATUS.
-           
-           IF EMPLOYEE-STATUS NOT = 10 THEN
-               PERFORM CALCULATE-SALARY
-               PERFORM STORE-SALARY.
+       STORE-SALARY.
+           MOVE EMPLOYEE-ID TO SALARY-EMPLOYEE-ID.
+           MOVE TEMP-GROSS-SALARY TO GROSS-SALARY.
+           MOVE TEMP-TAX-DEDUCTED TO TAX-DEDUCTED.
+           MOVE TEMP-NET-SALARY TO NET-SALARY.
+           WRITE SALARY-RECORD.
        
        CALCULATE-SALARY.
-           COMPUTE GROSS-SALARY = BASIC-SALARY + (OVERTIME-HOURS * 100).
-           COMPUTE TAX-DEDUCTED = (GROSS-SALARY * TAX-RATE) / 100.
-           COMPUTE NET-SALARY = GROSS-SALARY - TAX-DEDUCTED - LEAVE-DEDUCTIONS + BENEFITS.
+           COMPUTE TEMP-GROSS-SALARY = BASIC-SALARY + 
+               (OVERTIME-HOURS * 100).
+           COMPUTE TEMP-TAX-DEDUCTED = (TEMP-GROSS-SALARY * 
+               TAX-RATE) / 100.
+           COMPUTE TEMP-NET-SALARY = TEMP-GROSS-SALARY - 
+               TEMP-TAX-DEDUCTED - 
+               LEAVE-DEDUCTIONS + 
+               BENEFITS.
        
-       STORE-SALARY.
-           MOVE EMPLOYEE-ID TO SALARY-RECORD.
-           MOVE GROSS-SALARY TO SALARY-RECORD.
-           MOVE TAX-DEDUCTED TO SALARY-RECORD.
-           MOVE NET-SALARY TO SALARY-RECORD.
-           WRITE SALARY-RECORD.
+       PROCESS-EMPLOYEES.
+           READ EMPLOYEE-FILE
+               AT END SET EOF TO TRUE
+               NOT AT END PERFORM CALCULATE-SALARY
+                        PERFORM STORE-SALARY.
        
        END PROGRAM PAYROLL.
