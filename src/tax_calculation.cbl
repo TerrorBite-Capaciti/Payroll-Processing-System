@@ -18,13 +18,14 @@
 
        PROCEDURE DIVISION.
 
-       * Step 1: Get the Employee's Salary
-
-       DISPLAY "Enter employee salary (Rands): ".
+       *  Step 1:  the Employee's Salary
+       -   DISPLAY "Enter employee salary (Rands): ".
        ACCEPT Employee-Salary.
 
-       * Step 2: Apply Tax Calculation Logic
+      *Step 2: Apply Tax Calculation Logic
        IF Employee-Salary <= 195850 THEN
+
+
            MOVE 18 TO Tax-Rate
        ELSE IF Employee-Salary <= 305850 THEN
            MOVE 26 TO Tax-Rate
