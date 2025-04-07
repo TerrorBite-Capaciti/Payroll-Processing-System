@@ -56,4 +56,13 @@ CALCULATE-SALARY.
     COMPUTE NET-SALARY = WS-GROSS-SALARY - TAX-DEDUCTION - LEAVE-DEDUCTION + BENEFITS.
 
 GENERATE-PAYSLIP.
-    STRING 'Employee ID: ', EMPLOYEE-ID,'| Name:
+    STRING 'Employee ID: ', EMPLOYEE-ID,'| Name: ', EMPLOYEE-NAME,
+           ' | Gross Salary: ', WS-GROSS-SALARY,
+           ' | Tax Deduction: ', TAX-DEDUCTION,  
+           ' | Benefits: ', BENEFITS,
+           ' | Net Salary: ', NET-SALARY
+           INTO PAYSLIP-RECORD.
+
+    WRITE PAYSLIP-RECORD
+
+END PROGRAM PAYROLL.
