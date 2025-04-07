@@ -38,16 +38,34 @@
        01 TEMP-GROSS-SALARY        PIC 9(7)V99.
        01 TEMP-TAX-DEDUCTED        PIC 9(6)V99.
        01 TEMP-NET-SALARY          PIC 9(7)V99.
+       01 LOGGED-IN-ROLE           PIC X(10).
 
        PROCEDURE DIVISION.
        MAIN-PROCESS.
-           OPEN INPUT EMPLOYEE-FILE.
-           OPEN OUTPUT SALARY-FILE.
+           * CALL CLI MENU FOR USER LOGIN AND ROLE SELECTION
+           CALL 'cli_menu.cbl' USING LOGGED-IN-ROLE.
 
-           PERFORM PROCESS-EMPLOYEES UNTIL EOF.
+           * Check the user role (Admin or Employee)
+           IF LOGGED-IN-ROLE = 'ADMIN'
+               DISPLAY "Welcome Admin! You have access to all payroll functionalities."
+               * Admin can perform all tasks related to payroll processing
+               OPEN INPUT EMPLOYEE-FILE.
+               OPEN OUTPUT SALARY-FILE.
 
-           CLOSE EMPLOYEE-FILE.
-           CLOSE SALARY-FILE.
+               PERFORM PROCESS-EMPLOYEES UNTIL EOF.
+
+               CLOSE EMPLOYEE-FILE.
+               CLOSE SALARY-FILE.
+           ELSE IF LOGGED-IN-ROLE = 'EMPLOYEE'
+               DISPLAY "Welcome Employee! You have access to your payroll information."
+               * Employee can only view their payslip and salary history
+               DISPLAY "Viewing your payslip and salary history functionality."
+               * You can add additional employee-related functionality here.
+
+           ELSE
+               DISPLAY "Invalid role, access denied."
+           END-IF.
+
            STOP RUN.
        
        STORE-SALARY.
