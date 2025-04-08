@@ -10,6 +10,7 @@ cobc -x ../src/payroll.cbl \
          ../src/payslip_generator.cbl \
          ../src/leave_deductions.cbl \
          ../src/db_interaction.cbl \
+         ../src/tax_calculation.cbl \
          -o ../payroll
 
 if [ $? -eq 0 ]; then

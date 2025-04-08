@@ -9,6 +9,7 @@ cobc -x ../src/payroll.cbl \
          ../src/cli_commands.cbl \
          ../src/cli_helpers.cbl \
          ../src/leave_deductions.cbl \
+         ../src/tax_calculation.cbl \
          -o ../payroll
 
 if [ $? -eq 0 ]; then
