@@ -47,7 +47,7 @@
            05  AL-TIMESTAMP         PIC 9(14).
            05  AL-USER-ID           PIC X(08).
            05  AL-ACTION            PIC X(10).
-           05  AL-DETAILS            PIC X(50).
+           05  AL-DETAILS           PIC X(50).
            05  AL-STATUS            PIC X(01).
                88  AL-SUCCESS       VALUE 'S'.
                88  AL-FAILURE       VALUE 'F'.
@@ -152,7 +152,7 @@
            END-EVALUATE.
 
        122-VERIFY-PASSWORD.
-           IF LS-PASSWORD = USER-PASSWORD  *> Simplified for example
+           IF LS-PASSWORD = USER-PASSWORD
                MOVE 'S' TO LS-AUTH-RESULT
                MOVE USER-ROLE TO LS-USER-ROLE
            ELSE
@@ -250,8 +250,13 @@
            OPEN EXTEND AUDIT-LOG-FILE
            IF AUDIT-LOG-STATUS = '00'
                WRITE AUDIT-LOG-RECORD
-                   INVALID KEY
-                       DISPLAY 'AUDIT LOG WRITE ERROR: ' AUDIT-LOG-STATUS
-               END-WRITE
+               IF AUDIT-LOG-STATUS NOT = '00'
+                   DISPLAY 'AUDIT LOG WRITE ERROR: ' AUDIT-LOG-STATUS
+               END-IF
            ELSE
-               DISPLAY 'AUDIT LOG OPEN ERROR: ' AUDIT-LOG-STAT
+               DISPLAY 'AUDIT LOG OPEN ERROR: ' AUDIT-LOG-STATUS
+           END-IF
+           CLOSE AUDIT-LOG-FILE.
+
+       190-LOG-FILE-ERROR.
+           DISPLAY 'FILE ERROR: ' USER-FILE-STATUS.
