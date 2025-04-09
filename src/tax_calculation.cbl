@@ -7,21 +7,30 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01 Employee-Salary        PIC Z(5)9V99 VALUE 0.
-       01 Tax-Amount             PIC Z(5)9V99 VALUE 0.
+       01 Employee-Salary        PIC Z(7)V99 VALUE 0.
+       01 Tax-Amount             PIC Z(7)V99 VALUE 0.
        01 Tax-Bracket            PIC 9(2)    VALUE 0.
        01 Tax-Rate              PIC 9(2)    VALUE 0.
 
        01 Birthday-Bonus         PIC 9(4)    VALUE 500.
        01 Union-Fee              PIC 9(3)    VALUE 150.
-       01 Final-Salary           PIC Z(5)9V99 VALUE 0.
+       01 Final-Salary           PIC Z(7)V99 VALUE 0.
        01 User-Input             PIC X VALUE SPACE.
+
+        01 Employee-Salary-String  PIC X(12).
+       01 Tax-Amount-String      PIC X(12).
+       01 Final-Salary-String    PIC X(12).
 
        PROCEDURE DIVISION.
 
       *Step 1:  the Employee's Salary
            DISPLAY "Enter employee salary (Rands): ".
        ACCEPT Employee-Salary.
+            MOVE "R" TO Employee-Salary-String
+           STRING Employee-Salary DELIMITED BY SPACE
+                  INTO Employee-Salary-String
+           END-STRING.
+
 
       *Step 2: Apply Tax Calculation Logic
        IF Employee-Salary <= 195850 THEN
@@ -47,10 +56,10 @@
        COMPUTE Final-Salary = Employee-Salary - Tax-Amount.
 
       *Step 5: Display Tax and Final Salary
-       DISPLAY "Employee Salary: " Employee-Salary.
+       DISPLAY "Employee Salary: " "R" Employee-Salary-String.
        DISPLAY "Tax Rate: " Tax-Rate "%".
-       DISPLAY "Tax Amount: " Tax-Amount.
-       DISPLAY "Final Salary after Tax: " Final-Salary.
+       DISPLAY "Tax Amount: " "R" Tax-Amount.
+       DISPLAY "Final Salary after Tax: " "R" Final-Salary-String.
 
       *Optional: Apply Union Fee or Birthday Bonus
        DISPLAY "Do you want to apply Union Fee of R150? (Y/N): ".
@@ -65,6 +74,6 @@
            COMPUTE Final-Salary = Final-Salary + Birthday-Bonus
        END-IF.
 
-       DISPLAY"Final Salary after all deductions/bonuses: " Final-Salary.
+       DISPLAY"Final Salary after all deductions/bonuses: " Final-Salary-String.
 
        STOP RUN.
