@@ -78,7 +78,13 @@
 
        200-VALIDATE-INPUTS.
            EVALUATE LS-TAX-CODE
-               WHEN 'T1' 'T2' 'T3' 'T4'
+               WHEN 'T1' 
+                   MOVE '00' TO LS-ERROR-CODE
+               WHEN 'T2' 
+                   MOVE '00' TO LS-ERROR-CODE
+               WHEN 'T3' 
+                   MOVE '00' TO LS-ERROR-CODE
+               WHEN 'T4' 
                    MOVE '00' TO LS-ERROR-CODE
                WHEN OTHER
                    MOVE 'TC' TO LS-ERROR-CODE

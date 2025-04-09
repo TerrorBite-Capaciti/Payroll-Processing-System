@@ -206,12 +206,18 @@
            PERFORM 210-VALIDATE-ADMIN-REQUEST
            IF ADMIN-SUCCESS
                EVALUATE TRUE
-                   WHEN CREATE-USER  PERFORM 220-CREATE-USER
-                   WHEN UPDATE-USER  PERFORM 230-UPDATE-USER
-                   WHEN DELETE-USER  PERFORM 240-DELETE-USER
-                   WHEN LOCK-USER    PERFORM 250-LOCK-USER
-                   WHEN UNLOCK-USER  PERFORM 260-UNLOCK-USER
-                   WHEN RESET-PW     PERFORM 270-RESET-PASSWORD
+                   WHEN CREATE-USER  
+                       PERFORM 220-CREATE-USER
+                   WHEN UPDATE-USER  
+                       PERFORM 230-UPDATE-USER
+                   WHEN DELETE-USER  
+                       PERFORM 240-DELETE-USER
+                   WHEN LOCK-USER    
+                       PERFORM 250-LOCK-USER
+                   WHEN UNLOCK-USER  
+                       PERFORM 260-UNLOCK-USER
+                   WHEN RESET-PW     
+                       PERFORM 270-RESET-PASSWORD
                END-EVALUATE
            END-IF.
 
@@ -235,6 +241,59 @@
                    MOVE 'User created successfully' TO LS-ADMIN-MESSAGE
                    PERFORM 290-LOG-ADMIN-ACTION
            END-WRITE.
+
+       230-UPDATE-USER.
+           *> Add update user logic here
+           MOVE 'User updated successfully' TO LS-ADMIN-MESSAGE
+           PERFORM 290-LOG-ADMIN-ACTION.
+
+       240-DELETE-USER.
+           DELETE USER-FILE RECORD
+               INVALID KEY
+                   MOVE 'F' TO LS-ADMIN-RESULT
+                   MOVE 'User deletion failed' TO LS-ADMIN-MESSAGE
+               NOT INVALID KEY
+                   MOVE 'User deleted successfully' TO LS-ADMIN-MESSAGE
+                   PERFORM 290-LOG-ADMIN-ACTION
+           END-DELETE.
+
+       250-LOCK-USER.
+           MOVE 'L' TO USER-STATUS
+           REWRITE USER-RECORD
+               INVALID KEY
+                   MOVE 'F' TO LS-ADMIN-RESULT
+                   MOVE 'User lock failed' TO LS-ADMIN-MESSAGE
+               NOT INVALID KEY
+                   MOVE 'User locked successfully' TO LS-ADMIN-MESSAGE
+                   PERFORM 290-LOG-ADMIN-ACTION
+           END-REWRITE.
+
+       260-UNLOCK-USER.
+           MOVE 'A' TO USER-STATUS
+           MOVE 0 TO USER-FAILED-ATTEMPTS
+           REWRITE USER-RECORD
+               INVALID KEY
+                   MOVE 'F' TO LS-ADMIN-RESULT
+                   MOVE 'User unlock failed' TO LS-ADMIN-MESSAGE
+               NOT INVALID KEY
+                   MOVE 'User unlocked successfully' TO LS-ADMIN-MESSAGE
+                   PERFORM 290-LOG-ADMIN-ACTION
+           END-REWRITE.
+
+       270-RESET-PASSWORD.
+           MOVE LS-NEW-DATA(1:16) TO USER-PASSWORD
+           MOVE WS-CURRENT-DATE TO USER-PW-CHANGE-DATE
+           MOVE 'A' TO USER-STATUS
+           MOVE 0 TO USER-FAILED-ATTEMPTS
+           
+           REWRITE USER-RECORD
+               INVALID KEY
+                   MOVE 'F' TO LS-ADMIN-RESULT
+                   MOVE 'Password reset failed' TO LS-ADMIN-MESSAGE
+               NOT INVALID KEY
+                   MOVE 'Password reset successfully' TO LS-ADMIN-MESSAGE
+                   PERFORM 290-LOG-ADMIN-ACTION
+           END-REWRITE.
 
        290-LOG-ADMIN-ACTION.
            MOVE WS-CURRENT-DATE TO AL-TIMESTAMP(1:8)
