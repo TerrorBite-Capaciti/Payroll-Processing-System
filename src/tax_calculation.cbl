@@ -7,14 +7,14 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01 Employee-Salary        PIC 9(5)V99 VALUE 0.
-       01 Tax-Amount             PIC 9(5)V99 VALUE 0.
+       01 Employee-Salary        PIC Z(5)9V99 VALUE 0.
+       01 Tax-Amount             PIC Z(5)9V99 VALUE 0.
        01 Tax-Bracket            PIC 9(2)    VALUE 0.
        01 Tax-Rate              PIC 9(2)    VALUE 0.
 
        01 Birthday-Bonus         PIC 9(4)    VALUE 500.
        01 Union-Fee              PIC 9(3)    VALUE 150.
-       01 Final-Salary           PIC 9(5)V99 VALUE 0.
+       01 Final-Salary           PIC Z(5)9V99 VALUE 0.
        01 User-Input             PIC X VALUE SPACE.
 
        PROCEDURE DIVISION.
