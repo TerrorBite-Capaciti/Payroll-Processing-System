@@ -18,7 +18,7 @@
        DISPLAY-INTRO.
            DISPLAY-INTRO.
            DISPLAY "--------------------------------------------------".
-           DISPLAY "            WELCOME TO BYTE BANK PAYROLL SYSTEM   ".
+           DISPLAY "            WELCOME TO BYTE-BANK PAYROLL SYSTEM   ".
            DISPLAY "--------------------------------------------------".
            DISPLAY " ".
            DISPLAY "Please select your role:".
@@ -27,3 +27,33 @@
            DISPLAY " ".
            DISPLAY "Enter your choice: ".
            ACCEPT USER-CHOICE.
+
+           EVALUATE USER-CHOICE
+            WHEN 1
+                PERFORM ADMIN-MENU
+            WHEN 2
+                PERFORM EMPLOYEE-MENU
+            WHEN OTHER
+              DISPLAY "Invalid selection. Please run the progarm again."
+           END-EVALUATE.
+           STOP RUN.
+
+       ADMIN-MENU.
+           DISPLAY"___________________________________________________".
+           DISPLAY"            BYTE-BANK ADMIN MENU                   ".
+           DISPLAY"___________________________________________________".
+           DISPLAY"1. Add New Employee".
+           DISPLAY"2. Process Payroll".
+           DISPLAY"3. View Employee Payslip".
+           DISPLAY"4. View All Employees Report".
+           DISPLAY"5. Exit".
+           DISPLAY"___________________________________________________".
+
+       EMPLOYEE-MENU.
+           DISPLAY"___________________________________________________".
+           DISPLAY"            BYTE-BANK EMPLOYEE MENU                ".
+           DISPLAY"___________________________________________________".
+           DISPLAY"3. View Empl Payslip".
+           DISPLAY"4. View All Employees Report".
+           DISPLAY"5. Exit".
+           DISPLAY"___________________________________________________".
