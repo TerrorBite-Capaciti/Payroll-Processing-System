@@ -5,10 +5,11 @@ echo "Compiling COBOL files..."
 cobc -x ../src/payroll.cbl \
          ../src/user_management.cbl \
          ../src/cli_menu.cbl \
-         ../src/cli_admin.cbl \
-         ../src/cli_commands.cbl \
-         ../src/cli_helpers.cbl \
+         ../src/employee.cbl \
+         ../src/tax_calculation.cbl \
+         ../src/payslip_generator.cbl \
          ../src/leave_deductions.cbl \
+         ../src/db_interaction.cbl \
          ../src/tax_calculation.cbl \
          -o ../payroll
 
