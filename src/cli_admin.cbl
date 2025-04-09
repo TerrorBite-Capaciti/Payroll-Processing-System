@@ -48,12 +48,48 @@
            DISPLAY"4. View All Employees Report".
            DISPLAY"5. Exit".
            DISPLAY"___________________________________________________".
+           DISPLAY "Please select an option (1-5): ".
+           ACCEPT USER-CHOICE.
+
+           EVALUATE USER-CHOICE
+            WHEN 1
+                DISPLAY "Add New Employee ."
+      * Code to add new employee goes here
+            WHEN 2
+                DISPLAY "Process Payroll Functionality."
+      * Code to process payroll goes here
+            WHEN 3
+                DISPLAY "View Employee Payslip Functionality."
+      * Code to view payslip goes here
+            WHEN 4
+                DISPLAY "View All Employees Report Functionality."
+      * Code to view employee reports goes here
+            WHEN 5
+                DISPLAY "Exiting program."
+            WHEN OTHER
+                DISPLAY "Invalid selection. Please select between 1-5."
+           END-EVALUATE.
+
 
        EMPLOYEE-MENU.
            DISPLAY"___________________________________________________".
            DISPLAY"            BYTE-BANK EMPLOYEE MENU                ".
            DISPLAY"___________________________________________________".
-           DISPLAY"3. View Empl Payslip".
-           DISPLAY"4. View All Employees Report".
-           DISPLAY"5. Exit".
+           DISPLAY"1. View Employee Payslip".
+           DISPLAY"2. View All Employees Report".
+           DISPLAY"3. Exit".
            DISPLAY"___________________________________________________".
+           DISPLAY "Please select an option (1-3): ".
+           ACCEPT USER-CHOICE.
+           EVALUATE USER-CHOICE
+            WHEN 1
+                DISPLAY "View Employee Payslip Functionality."
+      * Code to view payslip goes here
+            WHEN 2
+                DISPLAY "View All Employees Report Functionality."
+      * Code to view reports goes here
+            WHEN 3
+                DISPLAY "Exiting program."
+            WHEN OTHER
+                DISPLAY "Invalid selection. Please select between 3-5."
+           END-EVALUATE.
