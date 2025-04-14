@@ -12,11 +12,11 @@
        DATA DIVISION.
 
        WORKING-STORAGE SECTION.
-       01 USER-CHOICE    PIC 9.
+       01 USER-CHOICE    PIC X.
 
        PROCEDURE DIVISION.
        DISPLAY-INTRO.
-           DISPLAY-INTRO.
+           
            DISPLAY "--------------------------------------------------".
            DISPLAY "            WELCOME TO BYTE-BANK PAYROLL SYSTEM   ".
            DISPLAY "--------------------------------------------------".
@@ -39,6 +39,7 @@
            STOP RUN.
 
        ADMIN-MENU.
+            PERFORM UNTIL USER-CHOICE ="5"
            DISPLAY"___________________________________________________".
            DISPLAY"            BYTE-BANK ADMIN MENU                   ".
            DISPLAY"___________________________________________________".
@@ -48,28 +49,43 @@
            DISPLAY"4. View All Employees Report".
            DISPLAY"5. Exit".
            DISPLAY"___________________________________________________".
-           DISPLAY "Please select an option (1-5): ".
+            DISPLAY " ".
+           DISPLAY"Enter your choice : "
            ACCEPT USER-CHOICE.
 
            EVALUATE USER-CHOICE
             WHEN 1
-                DISPLAY "Add New Employee ."
+                PERFORM ADD-EMPLOYEE
       * Code to add new employee goes here
-            WHEN 2
-                DISPLAY "Process Payroll Functionality."
+            WHEN "2"
+               PERFORM PROCESS-PAYROLL
       * Code to process payroll goes here
-            WHEN 3
-                DISPLAY "View Employee Payslip Functionality."
+            WHEN "3"
+                PEFORM VIEW-PAYROLL
       * Code to view payslip goes here
-            WHEN 4
-                DISPLAY "View All Employees Report Functionality."
+            WHEN "4"
+                PERFORM VIEW-REPORT
       * Code to view employee reports goes here
-            WHEN 5
+            WHEN "5"
                 DISPLAY "Exiting program."
             WHEN OTHER
                 DISPLAY "Invalid selection. Please select between 1-5."
            END-EVALUATE.
+    END-PERFORM
 
+    STOP RUN.
+
+    ADD-EMPLOYEE.
+           DISPLAY "Add Employee".
+
+       PROCESS-PAYROLL.
+           DISPLAY "Process Payroll functionality coming soon...".
+
+       VIEW-PAYSLIP.
+           DISPLAY "View Payslip functionality coming soon...".
+
+       VIEW-REPORT.
+           DISPLAY "View All Employees Report functionality coming soon...".
 
        EMPLOYEE-MENU.
            DISPLAY"___________________________________________________".
