@@ -60,6 +60,21 @@
            DISPLAY " "
            DISPLAY "CHOICE: " WITH NO ADVANCING 
            ACCEPT USER-INPUT
+
+           EVALUATE USER-INPUT
+             WHEN "1"
+              PERFORM LIST-ALL-EMPLOYEES
+             
+             WHEN "2"
+              PERFORM ADD-NEW-EMPLOYEE
+
+             WHEN "3"
+              PERFORM SEARCH-BY-ID
+
+             WHEN OTHER 
+              DISPLAY "GOING BACK TO MAIN MENU"
+              GOBACK
+           END-EVALUATE
            
            END-PERFORM
 
