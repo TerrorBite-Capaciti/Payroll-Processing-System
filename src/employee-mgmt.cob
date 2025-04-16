@@ -78,7 +78,8 @@
 
            END-PERFORM
            .
-
+      *****************************************************************
+      *****************************************************************
        CHECK-FILE-EXISTS.
            OPEN INPUT EMPLOYEE-FILE
 
@@ -90,7 +91,8 @@
            END-IF.
            CLOSE EMPLOYEE-FILE
            .
-
+      *****************************************************************
+      *****************************************************************
        CREATE-EMPLOYEE-LIST.
            OPEN INPUT EMPLOYEE-FILE
            DISPLAY "CREATING FILE"
@@ -102,7 +104,8 @@
            END-IF
            CLOSE EMPLOYEE-FILE
            .
-
+      *****************************************************************
+      *****************************************************************
            DISPLAY "Enter Employee ID: "
            ACCEPT EMP-ID
            DISPLAY "Enter Employee Name: "
