@@ -1,0 +1,18 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. TEST-AUTH-DRIVER.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01  AUTH-STATUS        PIC X.
+       01  USER-ROLE          PIC X.
+       01  EMP-ID             PIC X(10).
+
+       PROCEDURE DIVISION.
+           CALL "AUTHENTICATION"
+               USING AUTH-STATUS USER-ROLE EMP-ID
+
+           DISPLAY "AUTH STATUS: " AUTH-STATUS
+           DISPLAY "USER ROLE  : " USER-ROLE
+           DISPLAY "EMPLOYEE ID: " EMP-ID
+
+           STOP RUN.
