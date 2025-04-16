@@ -39,6 +39,10 @@
       *****   THIS IS AN OPTIONAL DATA-ITEM    ****
            05  WS-EMP-UNION-FEE PIC 9(5).
 
+       77 WS-EOF             PIC X(1) VALUE 'N'.
+       77 USER-INPUT         PIC X(1).
+       77 FILE-STATUS-CODE   PIC X(2).
+
        PROCEDURE DIVISION.
        BEGIN.
            DISPLAY "Enter Employee ID: "
