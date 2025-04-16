@@ -18,7 +18,7 @@
        FILE SECTION. 
        FD EMPLOYEE-FILE.
        01 EMPLOYEE-RECORD.
-           05  EMP-ID        PIC X(10).
+           05  EMP-ID        PIC 9(10).
            05  EMP-NAME      PIC X(50).
            05  EMP-SURNAME    PIC X(50).
            05  EMP-POSITION-TYPE PIC X(20).
