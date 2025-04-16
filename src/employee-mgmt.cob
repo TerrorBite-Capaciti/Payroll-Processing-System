@@ -15,10 +15,18 @@
       *****************************************************************
       *****************************************************************
        DATA DIVISION.
+       FILE SECTION. 
+       FD EMPLOYEE-FILE.
+       01 EMPLOYEE-RECORD.
+           05  EMP-ID        PIC X(10).
+           05  EMP-NAME      PIC X(50).
+           05  EMP-SURNAME    PIC X(50).
+           05  EMP-POSITION-TYPE PIC X(20).
+           05 EMP-BIRTH-DATE PIC X(8).
+           05  EMP-AGE       PIC 9(2).
+      *****   THIS IS AN OPTIONAL DATA-ITEM    ****
+           05 EMP-UNION-FEE PIC 9(5).
        WORKING-STORAGE SECTION.
-       01  EMP-ID        PIC X(10).
-       01  EMP-NAME      PIC X(50).
-       01  EMP-AGE       PIC 99.
 
        PROCEDURE DIVISION.
        BEGIN.
