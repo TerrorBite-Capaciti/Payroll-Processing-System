@@ -42,6 +42,7 @@
        77 WS-EOF             PIC X(1) VALUE 'N'.
        77 USER-INPUT         PIC X(1).
        77 FILE-STATUS-CODE   PIC X(2).
+       77 FILE-EXISTS        PIC X(1) VALUE 'N'.
 
        PROCEDURE DIVISION.
        BEGIN.
