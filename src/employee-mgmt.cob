@@ -59,6 +59,8 @@
            DISPLAY "3. SEARCH EMPLOYEE BY ID"
            DISPLAY " "
            DISPLAY "CHOICE: " WITH NO ADVANCING 
+           ACCEPT USER-INPUT
+           
            END-PERFORM
 
            DISPLAY "Enter Employee ID: "
