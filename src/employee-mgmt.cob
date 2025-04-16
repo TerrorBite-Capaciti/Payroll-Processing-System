@@ -1,7 +1,8 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. EMPLOYEE-MGMT.
        AUTHOR.     BYTEBANK-DEV.
-
+      *****************************************************************
+      *****************************************************************
        ENVIRONMENT DIVISION. 
        INPUT-OUTPUT SECTION. 
        FILE-CONTROL. 
@@ -11,7 +12,8 @@
               RECORD KEY IS EMPLOYEE-ID
               FILE STATUS IS FILE-STATUS-CODE
               .
-
+      *****************************************************************
+      *****************************************************************
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        01  EMP-ID        PIC X(10).
