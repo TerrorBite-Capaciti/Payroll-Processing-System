@@ -51,6 +51,16 @@
               PERFORM CREATE-EMPLOYEE-LIST
            END-IF.
 
+           PERFORM UNTIL USER-INPUT = "4"
+           DISPLAY "========== EMPLOYEE MANAGEMENT MODULE ============"
+           DISPLAY " "
+           DISPLAY "1. LIST ALL EMPLOYEES"
+           DISPLAY "2. ADD A NEW EMPLOYEE"
+           DISPLAY "3. SEARCH EMPLOYEE BY ID"
+           DISPLAY " "
+           DISPLAY "CHOICE: " WITH NO ADVANCING 
+           END-PERFORM
+
            DISPLAY "Enter Employee ID: "
            ACCEPT EMP-ID
            DISPLAY "Enter Employee Name: "
