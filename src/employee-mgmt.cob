@@ -2,6 +2,15 @@
        PROGRAM-ID. EMPLOYEE-MGMT.
        AUTHOR.     BYTEBANK-DEV.
 
+       ENVIRONMENT DIVISION. 
+       INPUT-OUTPUT SECTION. 
+       FILE-CONTROL. 
+           SELECT EMPLOYEE-FILE ASSIGN TO "data/employees.dat"
+              ORGANIZATION IS INDEXED
+              ACCESS MODE IS DYNAMIC
+              RECORD KEY IS EMPLOYEE-ID
+              .
+
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        01  EMP-ID        PIC X(10).
