@@ -22,7 +22,7 @@
            05  EMP-NAME      PIC X(50).
            05  EMP-SURNAME    PIC X(50).
            05  EMP-POSITION-TYPE PIC X(20).
-           05 EMP-BIRTH-DATE PIC X(8).
+           05  EMP-BIRTH-DATE PIC X(8).
            05  EMP-AGE       PIC 9(2).
       *****   THIS IS AN OPTIONAL DATA-ITEM    ****
            05 EMP-UNION-FEE PIC 9(5).
