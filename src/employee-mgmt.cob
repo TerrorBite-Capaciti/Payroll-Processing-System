@@ -26,7 +26,18 @@
            05  EMP-AGE       PIC 9(2).
       *****   THIS IS AN OPTIONAL DATA-ITEM    ****
            05 EMP-UNION-FEE PIC 9(5).
+
        WORKING-STORAGE SECTION.
+      *****DATA ITEMS FOR INPUTTING AND WRITING TO FILE
+       01 WS-EMPLOYEE.
+           05  WS-EMP-ID        PIC X(10).
+           05  WS-EMP-NAME      PIC X(50).
+           05  WS-EMP-SURNAME    PIC X(50).
+           05  WS-EMP-POSITION-TYPE PIC X(20).
+           05  WS-EMP-BIRTH-DATE PIC X(8).
+           05  WS-EMP-AGE       PIC 9(2).
+      *****   THIS IS AN OPTIONAL DATA-ITEM    ****
+           05  WS-EMP-UNION-FEE PIC 9(5).
 
        PROCEDURE DIVISION.
        BEGIN.
