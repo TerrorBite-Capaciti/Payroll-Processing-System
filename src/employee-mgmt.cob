@@ -77,6 +77,7 @@
            END-EVALUATE
 
            END-PERFORM
+           .
 
        CHECK-FILE-EXISTS.
            OPEN INPUT EMPLOYEE-FILE
