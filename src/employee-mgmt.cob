@@ -135,17 +135,44 @@
            .
       *****************************************************************
       *****************************************************************
+       ADD-NEW-EMPLOYEE.
+           DISPLAY "ENTER EMPLOYEE'S FIRST NAME: " WITH NO ADVANCING 
+           ACCEPT WS-EMP-NAME
 
-           DISPLAY "Enter Employee ID: "
-           ACCEPT EMP-ID
-           DISPLAY "Enter Employee Name: "
-           ACCEPT EMP-NAME
-           DISPLAY "Enter Employee Age: "
-           ACCEPT EMP-AGE
+           DISPLAY "ENTER EMPLOYEE'S SURNAME: " WITH NO ADVANCING 
+           ACCEPT WS-EMP-SURNAME
 
-           DISPLAY "Employee ID: " EMP-ID
-           DISPLAY "Employee Name: " EMP-NAME
-           DISPLAY "Employee Age: " EMP-AGE
-           GOBACK.
+           DISPLAY "ENTER EMPLOYEE'S POSITION TYPE (INTERN, "
+           "INTERMEDIATE, SENIOR: " WITH NO ADVANCING 
+           ACCEPT WS-EMP-POSITION-TYPE
 
+           DISPLAY "ENTER EMPLOYEE'S BIRTHDATE: " WITH NO ADVANCING 
+           ACCEPT WS-EMP-BIRTH-DATE
+
+           DISPLAY "ENTER EMPLOYEE'S AGE: " WITH NO ADVANCING 
+           ACCEPT WS-EMP-AGE
+
+           DISPLAY "(OPTIONAL) ENTER EMPLOYEE'S UNION FEE: "
+            WITH NO ADVANCING 
+           ACCEPT WS-EMP-UNION-FEE
+
+           MOVE WS-EMP-NAME           TO EMP-NAME
+           MOVE WS-EMP-SURNAME        TO EMP-SURNAME
+           MOVE WS-EMP-POSITION-TYPE  TO EMP-POSITION-TYPE
+           MOVE WS-EMP-BIRTH-DATE     TO EMP-BIRTH-DATE
+           MOVE WS-EMP-AGE            TO EMP-AGE
+           MOVE WS-EMP-UNION-FEE      TO EMP-UNION-FEE
+
+           WRITE EMPLOYEE-RECORD
+              INVALID KEY
+                 DISPLAY WS-EMP-NAME " ALREADY EXISTS!"
+
+              NOT INVALID KEY
+                 DISPLAY "ADDING " WS-EMP-NAME
+           END-WRITE
+           CLOSE EMPLOYEE-FILE
+           GOBACK
+           .
+      *****************************************************************
+      *****************************************************************
        END PROGRAM EMPLOYEE-MGMT.
