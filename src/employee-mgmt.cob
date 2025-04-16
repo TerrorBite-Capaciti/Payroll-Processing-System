@@ -9,6 +9,7 @@
               ORGANIZATION IS INDEXED
               ACCESS MODE IS DYNAMIC
               RECORD KEY IS EMPLOYEE-ID
+              FILE STATUS IS FILE-STATUS-CODE
               .
 
        DATA DIVISION.
