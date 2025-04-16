@@ -175,4 +175,51 @@
            .
       *****************************************************************
       *****************************************************************
+       SEARCH-BY-ID.
+
+      * INITIALISING VARIABLES FOR SEARCH AND DISPLAY
+           MOVE 0000000000 TO WS-EMP-ID
+           MOVE " " TO WS-EMP-NAME
+           MOVE " " TO WS-EMP-SURNAME
+           MOVE " " TO WS-EMP-POSITION-TYPE
+           MOVE " " TO WS-EMP-BIRTH-DATE
+           MOVE " " TO WS-EMP-AGE
+           MOVE " " TO WS-EMP-UNION-FEE
+
+           OPEN I-O EMPLOYEE-FILE
+           DISPLAY "==================================================="
+           DISPLAY "SEARCH"
+           DISPLAY "==================================================="
+
+      * CHECK IF FILE HAS BEEN OPENED CORRECTLY
+           IF FILE-STATUS-CODE = "00" OR FILE-STATUS-CODE = "97"
+              DISPLAY " "
+              DISPLAY "ENTER EMPLOYEE ID: " WITH NO ADVANCING 
+              ACCEPT WS-EMP-ID
+
+              MOVE WS-EMP-ID TO EMP-ID
+
+              READ EMPLOYEE-FILE INTO EMPLOYEE-RECORD
+                 KEY IS EMP-ID
+
+                 INVALID KEY
+                    DISPLAY "EMPLOYEE NOT FOUND!"
+
+                 NOT INVALID KEY 
+                 DISPLAY " "
+                 DISPLAY "============================================="
+                 DISPLAY "ID: " EMP-ID
+                 DISPLAY "NAME: " EMP-NAME
+                 DISPLAY "SURNAME: " EMP-SURNAME
+                 DISPLAY "POSITION: " EMP-POSITION-TYPE
+                 DISPLAY "BIRTHDATE: " EMP-BIRTH-DATE
+                 DISPLAY "AGE: " EMP-AGE
+                 DISPLAY "UNION FEE: " EMP-UNION-FEE
+                 DISPLAY "============================================="
+              END-READ
+           ELSE
+              DISPLAY "ERROR READING FILE. code: " FILE-STATUS-CODE
+           END-IF 
+           CLOSE EMPLOYEE-FILE
+           .
        END PROGRAM EMPLOYEE-MGMT.
