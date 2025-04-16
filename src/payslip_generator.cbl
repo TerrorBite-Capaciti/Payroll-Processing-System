@@ -49,8 +49,33 @@ BEGIN.
          END-READ
     END-PERFORM
     
-CLOSE EMPLOYEE-FILE
+     CLOSE EMPLOYEE-FILE
      PAYSLIP-FILE
 
-DISPLAY "Payslips generated successfully."
-STOP RUN.
+     DISPLAY "Payslips generated successfully."
+     STOP RUN.
+
+GENERATE-PAYSLIP.
+     COMPUTE GROSS-PAY = (HOURS-WORKED * HOURLY-RATE)
+                       + (OVERTIME-HOURS * HOURLY-RATE * 1.5)
+                       + BONUS
+    
+     COMPUTE NET-PAY = GROSS-PAY
+                     - TAX-DEDUCTION
+                     - LEAVE-DEDUCTION
+                     + BENEFITS
+                    
+    WRITE PAYSLIP-RECORD FROM
+               "===============================" & X"0A" &
+               "Employee ID: " & EMP-ID & X"0A" &
+               "Name       : " & EMP-NAME & X"0A" &
+               "Hours Worked     : " & HOURS-WORKED & X"0A" &
+               "Overtime Hours   : " & OVERTIME-HOURS & X"0A" &
+               "Hourly Rate      : R" & HOURLY-RATE & X"0A" &
+               "Bonus            : R" & BONUS & X"0A" &
+               "Tax Deduction    : R" & TAX-DEDUCTION & X"0A" &
+               "Leave Deduction  : R" & LEAVE-DEDUCTION & X"0A" &
+               "Benefits         : R" & BENEFITS & X"0A" &
+               "Gross Pay        : R" & GROSS-PAY & X"0A" &
+               "Net Pay          : R" & NET-PAY & X"0A" &
+               "===============================".            
