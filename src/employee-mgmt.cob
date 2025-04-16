@@ -91,6 +91,18 @@
            CLOSE EMPLOYEE-FILE
            .
 
+       CREATE-EMPLOYEE-LIST.
+           OPEN INPUT EMPLOYEE-FILE
+           DISPLAY "CREATING FILE"
+
+           IF FILE-STATUS-CODE = "00"
+              DISPLAY "FILE CREATED. code: " FILE-STATUS-CODE
+           ELSE
+              DISPLAY "ERROR CREATING FILE. code: " FILE-STATUS-CODE
+           END-IF
+           CLOSE EMPLOYEE-FILE
+           .
+
            DISPLAY "Enter Employee ID: "
            ACCEPT EMP-ID
            DISPLAY "Enter Employee Name: "
