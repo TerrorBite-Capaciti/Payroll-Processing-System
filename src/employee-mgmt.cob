@@ -75,6 +75,18 @@
               DISPLAY "GOING BACK TO MAIN MENU"
               GOBACK
            END-EVALUATE
+
+       CHECK-FILE-EXISTS.
+           OPEN INPUT EMPLOYEE-FILE
+
+           IF FILE-STATUS-CODE = "00"
+              CLOSE EMPLOYEE-FILE 
+              MOVE 'Y' TO FILE-EXISTS
+           ELSE
+              MOVE 'N' TO FILE-EXISTS
+           END-IF.
+           CLOSE EMPLOYEE-FILE
+           .
            
            END-PERFORM
 
