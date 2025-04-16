@@ -9,7 +9,7 @@
            SELECT EMPLOYEE-FILE ASSIGN TO "data/employees.dat"
               ORGANIZATION IS INDEXED
               ACCESS MODE IS DYNAMIC
-              RECORD KEY IS EMPLOYEE-ID
+              RECORD KEY IS EMP-ID
               FILE STATUS IS FILE-STATUS-CODE
               .
       *****************************************************************
