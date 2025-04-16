@@ -46,6 +46,11 @@
 
        PROCEDURE DIVISION.
        BEGIN.
+           PERFORM CHECK-FILE-EXISTS
+           IF FILE-EXISTS = 'N'
+              PERFORM CREATE-EMPLOYEE-LIST
+           END-IF.
+
            DISPLAY "Enter Employee ID: "
            ACCEPT EMP-ID
            DISPLAY "Enter Employee Name: "
