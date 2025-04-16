@@ -27,9 +27,11 @@
            05 CD-MONTH          PIC 9(2).
            05 CD-DAY            PIC 9(2).
 
-       01 WS-Formatted-Salary    PIC Z(6)9.99.
-       01 WS-Formatted-Tax       PIC Z(6)9.99.
-       01 WS-Formatted-Final     PIC Z(6)9.99.
+       01 Display-Final-Salary  PIC Z(7).99.
+
+       01 WS-Formatted-Salary   PIC Z(6)9.99.
+       01 WS-Formatted-Tax      PIC Z(6)9.99.
+       01 WS-Formatted-Final    PIC Z(6)9.99.
 
        PROCEDURE DIVISION.
       * Step 1: Get today’s date
@@ -67,7 +69,7 @@
        MOVE Final-Salary    TO WS-Formatted-Final
 
       *Step 6: Display Tax and Final Salary
-       DISPLAY "Employee Salary: " "R" WS-Formatted-Salary.
+       DISPLAY "Employee Salary: R" WS-Formatted-Salary.
        DISPLAY "Tax Rate: " Tax-Rate "%".
        DISPLAY "Tax Amount: R" WS-Formatted-Tax.
        DISPLAY "Final Salary after Tax: R" WS-Formatted-Final.
@@ -94,7 +96,7 @@
            END-IF.
 
       * Final Salary Display
-       MOVE Final-Salary TO WS-Formatted-Final
-       DISPLAY"Final Salary after all deductions/bonuses: " Final-Salary-String.
+       MOVE Final-Salary TO Display-Final-Salary
+       DISPLAY "Final Salary : R " Display-Final-Salary.
 
        STOP RUN.
