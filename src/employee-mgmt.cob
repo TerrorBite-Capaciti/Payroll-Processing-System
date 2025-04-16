@@ -127,9 +127,14 @@
                  DISPLAY "============================================="
            END-READ
            END-PERFORM
+           
+           ELSE
+              DISPLAY "ERROR READING EMPLOYEES LIST: code"
+                 FILE-STATUS-CODE
+           END-IF
       *****************************************************************
       *****************************************************************
-      
+
            DISPLAY "Enter Employee ID: "
            ACCEPT EMP-ID
            DISPLAY "Enter Employee Name: "
