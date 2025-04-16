@@ -76,6 +76,8 @@
               GOBACK
            END-EVALUATE
 
+           END-PERFORM
+
        CHECK-FILE-EXISTS.
            OPEN INPUT EMPLOYEE-FILE
 
@@ -87,8 +89,6 @@
            END-IF.
            CLOSE EMPLOYEE-FILE
            .
-           
-           END-PERFORM
 
            DISPLAY "Enter Employee ID: "
            ACCEPT EMP-ID
