@@ -106,6 +106,30 @@
            .
       *****************************************************************
       *****************************************************************
+       LIST-ALL-EMPLOYEES.
+           OPEN I-O EMPLOYEE-FILE
+           IF FILE-STATUS-CODE = "00" OR FILE-STATUS-CODE = "97"
+              DISPLAY "BYTEBANK EMPLOYEES"
+             
+           PERFORM UNTIL WS-EOF = 'Y'
+           READ EMPLOYEE-FILE NEXT RECORD 
+              AT END MOVE 'Y' TO WS-EOF
+              NOT AT END
+                 DISPLAY " "
+                 DISPLAY "============================================="
+                 DISPLAY "ID: " EMP-ID
+                 DISPLAY "NAME: " EMP-NAME
+                 DISPLAY "SURNAME: " EMP-SURNAME
+                 DISPLAY "POSITION: " EMP-POSITION-TYPE
+                 DISPLAY "BIRTHDATE: " EMP-BIRTH-DATE
+                 DISPLAY "AGE: " EMP-AGE
+                 DISPLAY "UNION FEE: " EMP-UNION-FEE
+                 DISPLAY "============================================="
+           END-READ
+           END-PERFORM
+      *****************************************************************
+      *****************************************************************
+      
            DISPLAY "Enter Employee ID: "
            ACCEPT EMP-ID
            DISPLAY "Enter Employee Name: "
