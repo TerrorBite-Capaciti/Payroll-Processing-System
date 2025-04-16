@@ -49,3 +49,8 @@ BEGIN.
          END-READ
     END-PERFORM
     
+CLOSE EMPLOYEE-FILE
+     PAYSLIP-FILE
+
+DISPLAY "Payslips generated successfully."
+STOP RUN.
