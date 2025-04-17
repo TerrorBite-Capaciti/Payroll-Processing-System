@@ -93,17 +93,20 @@
               MOVE 'Y' TO FILE-EXISTS
            ELSE
               MOVE 'N' TO FILE-EXISTS
-           END-IF.
-           CLOSE EMPLOYEE-FILE
+           END-IF
            .
       *****************************************************************
       *****************************************************************
        CREATE-EMPLOYEE-LIST.
-           OPEN INPUT EMPLOYEE-FILE
+      * OUTPUT CREATES FILE OR OVERWRITES EXISTING
+      * HERE, IT IS DETERMINED FILE DOESN'T EXIST
+      * SO IT IS SAFE TO USE OUTPUT
+           OPEN OUTPUT EMPLOYEE-FILE
            DISPLAY "CREATING FILE"
 
            IF FILE-STATUS-CODE = "00"
               DISPLAY "FILE CREATED. code: " FILE-STATUS-CODE
+           CLOSE EMPLOYEE-FILE
            ELSE
               DISPLAY "ERROR CREATING FILE. code: " FILE-STATUS-CODE
            END-IF
@@ -114,11 +117,27 @@
        LIST-ALL-EMPLOYEES.
            OPEN I-O EMPLOYEE-FILE
            IF FILE-STATUS-CODE = "00" OR FILE-STATUS-CODE = "97"
+              DISPLAY " "
               DISPLAY "BYTEBANK EMPLOYEES"
+              DISPLAY " "
+           
+           MOVE WS-LOW-KEY TO EMP-ID
+           START EMPLOYEE-FILE KEY >= EMP-ID
+               INVALID KEY 
+                   DISPLAY "NO RECORDS FOUND"
+                   MOVE 'Y' TO WS-EOF
+               NOT INVALID KEY 
+                   CONTINUE
+           END-START
              
            PERFORM UNTIL WS-EOF = 'Y'
            READ EMPLOYEE-FILE NEXT RECORD 
               AT END MOVE 'Y' TO WS-EOF
+              DISPLAY " "
+              DISPLAY "||||||||||||||||||||||||||||||||||||||||||||||"
+              DISPLAY "                END OF FILE"
+              DISPLAY "||||||||||||||||||||||||||||||||||||||||||||||"
+              DISPLAY " "
               NOT AT END
                  DISPLAY " "
                  DISPLAY "============================================="
@@ -131,11 +150,13 @@
                  DISPLAY "UNION FEE: " EMP-UNION-FEE
                  DISPLAY "============================================="
            END-READ
+           CLOSE EMPLOYEE-FILE
            END-PERFORM
            
            ELSE
-              DISPLAY "ERROR READING EMPLOYEES LIST: code"
+              DISPLAY "ERROR READING EMPLOYEES LIST. code: "
                  FILE-STATUS-CODE
+              GOBACK
            END-IF
            .
       *****************************************************************
