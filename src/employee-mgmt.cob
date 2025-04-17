@@ -206,17 +206,18 @@
        SEARCH-BY-ID.
 
       * INITIALISING VARIABLES FOR SEARCH AND DISPLAY
-           MOVE 0000000000 TO WS-EMP-ID
-           MOVE " " TO WS-EMP-NAME
-           MOVE " " TO WS-EMP-SURNAME
-           MOVE " " TO WS-EMP-POSITION-TYPE
-           MOVE " " TO WS-EMP-BIRTH-DATE
-           MOVE " " TO WS-EMP-AGE
-           MOVE " " TO WS-EMP-UNION-FEE
+           INITIALIZE WS-EMP-ID
+           DISPLAY "ID: " WS-EMP-ID
+           INITIALIZE WS-EMP-NAME
+           INITIALIZE WS-EMP-SURNAME
+           INITIALIZE WS-EMP-POSITION-TYPE
+           INITIALIZE WS-EMP-BIRTH-DATE
+           INITIALIZE WS-EMP-AGE
+           INITIALIZE WS-EMP-UNION-FEE
 
            OPEN I-O EMPLOYEE-FILE
            DISPLAY "==================================================="
-           DISPLAY "SEARCH"
+           DISPLAY "                     SEARCH                        "
            DISPLAY "==================================================="
 
       * CHECK IF FILE HAS BEEN OPENED CORRECTLY
@@ -244,6 +245,7 @@
                  DISPLAY "AGE: " EMP-AGE
                  DISPLAY "UNION FEE: " EMP-UNION-FEE
                  DISPLAY "============================================="
+                 DISPLAY " "
               END-READ
            ELSE
               DISPLAY "ERROR READING FILE. code: " FILE-STATUS-CODE
