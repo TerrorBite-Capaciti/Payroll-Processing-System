@@ -43,6 +43,7 @@
        77 USER-INPUT         PIC X(1).
        77 FILE-STATUS-CODE   PIC X(2).
        77 FILE-EXISTS        PIC X(1) VALUE 'N'.
+       01 WS-LOW-KEY         PIC 9(10) VALUE ZEROS.
 
        PROCEDURE DIVISION.
        BEGIN.
@@ -110,7 +111,6 @@
            ELSE
               DISPLAY "ERROR CREATING FILE. code: " FILE-STATUS-CODE
            END-IF
-           CLOSE EMPLOYEE-FILE
            .
       *****************************************************************
       *****************************************************************
