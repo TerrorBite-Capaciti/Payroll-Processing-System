@@ -73,9 +73,12 @@
              WHEN "3"
               PERFORM SEARCH-BY-ID
 
+      * ALLOWS TO RETURN BACK TO THE CALLING PROGRAM (i.e, MAIN MENU)
+             WHEN "4"
+             STOP RUN
+
              WHEN OTHER 
-              DISPLAY "GOING BACK TO MAIN MENU"
-              GOBACK
+             DISPLAY "INVALID INPUT"
            END-EVALUATE
 
            END-PERFORM
