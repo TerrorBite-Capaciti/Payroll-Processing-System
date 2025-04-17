@@ -58,6 +58,8 @@
            DISPLAY "2. ADD A NEW EMPLOYEE"
            DISPLAY "3. SEARCH EMPLOYEE BY ID"
            DISPLAY " "
+           DISPLAY "4. RETURN TO MAIN MENU"
+           DISPLAY " "
            DISPLAY "CHOICE: " WITH NO ADVANCING 
            ACCEPT USER-INPUT
 
