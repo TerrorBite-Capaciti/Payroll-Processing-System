@@ -47,7 +47,7 @@
            MOVE "Nizaam Hafejjee" TO EMP-NAME
            MOVE "Developer" TO EMP-POSITION
            MOVE 35000.00 TO BASE-SALARY
-           MOVE 25.00 TO TAX-RATE
+           MOVE 25 TO TAX-RATE
            MOVE "Y" TO MEDICAL-AID
            WRITE EMPLOYEE-RECORD
            IF FILE-STATUS NOT = "00"
@@ -59,7 +59,7 @@
            MOVE "Ayanda Radebe" TO EMP-NAME
            MOVE "Software Dev" TO EMP-POSITION
            MOVE 40000.00 TO BASE-SALARY
-           MOVE 30.00 TO TAX-RATE
+           MOVE 30 TO TAX-RATE
            MOVE "Y" TO MEDICAL-AID
            WRITE EMPLOYEE-RECORD
            IF FILE-STATUS NOT = "00"
@@ -72,7 +72,7 @@
            MOVE "Lefa Jele" TO EMP-NAME
            MOVE "QA Tester" TO EMP-POSITION
            MOVE 30000.00 TO BASE-SALARY
-           MOVE 20.00 TO TAX-RATE
+           MOVE 20 TO TAX-RATE
            MOVE "N" TO MEDICAL-AID
            WRITE EMPLOYEE-RECORD
            IF FILE-STATUS NOT = "00"
@@ -85,7 +85,7 @@
            MOVE "Silindile Shabangu" TO EMP-NAME
            MOVE "Analyst" TO EMP-POSITION
            MOVE 32000.00 TO BASE-SALARY
-           MOVE 25.00 TO TAX-RATE
+           MOVE 25 TO TAX-RATE
            MOVE "Y" TO MEDICAL-AID
            WRITE EMPLOYEE-RECORD
            IF FILE-STATUS NOT = "00"
@@ -98,7 +98,7 @@
            MOVE "Sisamkele Vava" TO EMP-NAME
            MOVE "Admin Assistant" TO EMP-POSITION
            MOVE 28000.00 TO BASE-SALARY
-           MOVE 18.00 TO TAX-RATE
+           MOVE 18 TO TAX-RATE
            MOVE "N" TO MEDICAL-AID
            WRITE EMPLOYEE-RECORD
            IF FILE-STATUS NOT = "00"
