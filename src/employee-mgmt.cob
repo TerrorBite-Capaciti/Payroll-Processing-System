@@ -162,6 +162,7 @@
       *****************************************************************
       *****************************************************************
        ADD-NEW-EMPLOYEE.
+           OPEN I-O EMPLOYEE-FILE
            DISPLAY "ENTER EMPLOYEE'S FIRST NAME: " WITH NO ADVANCING 
            ACCEPT WS-EMP-NAME
 
@@ -169,7 +170,7 @@
            ACCEPT WS-EMP-SURNAME
 
            DISPLAY "ENTER EMPLOYEE'S POSITION TYPE (INTERN, "
-           "INTERMEDIATE, SENIOR: " WITH NO ADVANCING 
+           "INTERMEDIATE, SENIOR): " WITH NO ADVANCING 
            ACCEPT WS-EMP-POSITION-TYPE
 
            DISPLAY "ENTER EMPLOYEE'S BIRTHDATE (YYYY/MM/DD): " 
@@ -195,7 +196,7 @@
                  DISPLAY WS-EMP-NAME " ALREADY EXISTS!"
 
               NOT INVALID KEY
-                 DISPLAY "ADDING " WS-EMP-NAME
+                 DISPLAY "ADDING " WS-EMP-NAME WS-EMP-SURNAME
            END-WRITE
            CLOSE EMPLOYEE-FILE
            GOBACK
