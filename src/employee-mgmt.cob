@@ -121,6 +121,7 @@
               DISPLAY "BYTEBANK EMPLOYEES"
               DISPLAY " "
            
+      * TELLS THE FILE POINTER WHERE THE START OF THE FILE IS
            MOVE WS-LOW-KEY TO EMP-ID
            START EMPLOYEE-FILE KEY >= EMP-ID
                INVALID KEY 
