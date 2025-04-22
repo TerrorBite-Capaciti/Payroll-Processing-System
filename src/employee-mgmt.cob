@@ -22,7 +22,11 @@
            05  EMP-NAME                  PIC X(50).
            05  EMP-SURNAME               PIC X(50).
            05  EMP-POSITION-TYPE         PIC X(20).
-           05  EMP-BIRTH-DATE            PIC X(8).
+           05  EMP-BIRTH               .
+              10 EMP-BIRTH-YEAR             PIC X(4).
+              10 EMP-BIRTH-MONTH            PIC X(2).
+              10 EMP-BIRTH-DATE             PIC X(2).
+
            05  EMP-AGE                   PIC 9(2).
       *****   THIS IS AN OPTIONAL DATA-ITEM    ****
            05 EMP-UNION-FEE              PIC 9(5).
@@ -34,7 +38,13 @@
            05  WS-EMP-NAME                     PIC X(50).
            05  WS-EMP-SURNAME                  PIC X(50).
            05  WS-EMP-POSITION-TYPE            PIC X(20).
-           05  WS-EMP-BIRTH-DATE               PIC X(8).
+
+      * THE EMPLOYEE'S FULL BIRTHDATE     
+           05  WS-EMP-BIRTH               .
+              10 WS-EMP-BIRTH-YEAR             PIC X(4).
+              10 WS-EMP-BIRTH-MONTH            PIC X(2).
+              10 WS-EMP-BIRTH-DATE             PIC X(2).
+
            05  WS-EMP-AGE                      PIC 9(2).
       *****   THIS IS AN OPTIONAL DATA-ITEM    ****
            05  WS-EMP-UNION-FEE                PIC 9(5).
@@ -174,7 +184,15 @@
            "INTERMEDIATE, SENIOR): " WITH NO ADVANCING 
            ACCEPT WS-EMP-POSITION-TYPE
 
-           DISPLAY "ENTER EMPLOYEE'S BIRTHDATE (YYYY/MM/DD): " 
+           DISPLAY "ENTER EMPLOYEE'S BIRTH YEAR (YYYY): " 
+              WITH NO ADVANCING   
+           ACCEPT WS-EMP-BIRTH-YEAR
+
+           DISPLAY "ENTER EMPLOYEE'S BIRTH MONTH (MM): " 
+              WITH NO ADVANCING 
+           ACCEPT WS-EMP-BIRTH-MONTH
+
+           DISPLAY "ENTER EMPLOYEE'S BIRTH DATE (DD): " 
               WITH NO ADVANCING 
            ACCEPT WS-EMP-BIRTH-DATE
 
@@ -185,19 +203,22 @@
             WITH NO ADVANCING 
            ACCEPT WS-EMP-UNION-FEE
 
-           MOVE WS-EMP-NAME           TO EMP-NAME
-           MOVE WS-EMP-SURNAME        TO EMP-SURNAME
-           MOVE WS-EMP-POSITION-TYPE  TO EMP-POSITION-TYPE
-           MOVE WS-EMP-BIRTH-DATE     TO EMP-BIRTH-DATE
-           MOVE WS-EMP-AGE            TO EMP-AGE
-           MOVE WS-EMP-UNION-FEE      TO EMP-UNION-FEE
+           MOVE WS-EMP-NAME              TO EMP-NAME
+           MOVE WS-EMP-SURNAME           TO EMP-SURNAME
+           MOVE WS-EMP-POSITION-TYPE     TO EMP-POSITION-TYPE
+           MOVE WS-EMP-BIRTH-YEAR        TO EMP-BIRTH-YEAR
+           MOVE WS-EMP-BIRTH-MONTH       TO EMP-BIRTH-MONTH
+           MOVE WS-EMP-BIRTH-DATE        TO EMP-BIRTH-DATE
+           MOVE WS-EMP-AGE               TO EMP-AGE
+           MOVE WS-EMP-UNION-FEE         TO EMP-UNION-FEE
 
            WRITE EMPLOYEE-RECORD
               INVALID KEY
+                 DISPLAY WS-EMP-ID
                  DISPLAY WS-EMP-NAME " ALREADY EXISTS!"
 
               NOT INVALID KEY
-                 DISPLAY "ADDING " WS-EMP-NAME WS-EMP-SURNAME
+              DISPLAY EMP-NAME " HAS BEEN SUCCESSFULLY ADDED."
            END-WRITE
            CLOSE EMPLOYEE-FILE
            GOBACK
