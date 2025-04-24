@@ -18,32 +18,32 @@
        FILE SECTION. 
        FD EMPLOYEE-FILE.
        01 EMPLOYEE-RECORD.
-           05  EMP-ID                    PIC 9(10).
-           05  EMP-NAME                  PIC X(50).
-           05  EMP-SURNAME               PIC X(50).
-           05  EMP-POSITION-TYPE         PIC X(20).
+           05  EMP-ID                          PIC 9(5).
+           05  EMP-NAME                        PIC X(50).
+           05  EMP-SURNAME                     PIC X(50).
+           05  EMP-POSITION-TYPE               PIC X(20).
            05  EMP-BIRTH               .
-              10 EMP-BIRTH-YEAR             PIC X(4).
-              10 EMP-BIRTH-MONTH            PIC X(2).
-              10 EMP-BIRTH-DATE             PIC X(2).
+              10 EMP-BIRTH-YEAR                PIC 9(4).
+              10 EMP-BIRTH-MONTH               PIC 9(2).
+              10 EMP-BIRTH-DATE                PIC 9(2).
 
-           05  EMP-AGE                   PIC 9(2).
+           05  EMP-AGE                         PIC 9(2).
       *****   THIS IS AN OPTIONAL DATA-ITEM    ****
-           05 EMP-UNION-FEE              PIC 9(5).
+           05 EMP-UNION-FEE                    PIC 9(5).
 
        WORKING-STORAGE SECTION.
       *****DATA ITEMS FOR INPUTTING AND WRITING TO FILE
        01 WS-EMPLOYEE.
-           05  WS-EMP-ID                       PIC 9(10).
+           05  WS-EMP-ID                       PIC 9(5).
            05  WS-EMP-NAME                     PIC X(50).
            05  WS-EMP-SURNAME                  PIC X(50).
            05  WS-EMP-POSITION-TYPE            PIC X(20).
 
       * THE EMPLOYEE'S FULL BIRTHDATE     
            05  WS-EMP-BIRTH               .
-              10 WS-EMP-BIRTH-YEAR             PIC X(4).
-              10 WS-EMP-BIRTH-MONTH            PIC X(2).
-              10 WS-EMP-BIRTH-DATE             PIC X(2).
+              10 WS-EMP-BIRTH-YEAR             PIC 9(4).
+              10 WS-EMP-BIRTH-MONTH            PIC 9(2).
+              10 WS-EMP-BIRTH-DATE             PIC 9(2).
 
            05  WS-EMP-AGE                      PIC 9(2).
       *****   THIS IS AN OPTIONAL DATA-ITEM    ****
@@ -54,11 +54,11 @@
            05 WS-CURRENT-MONTH                 PIC 9(2).
            05 WS-CURRENT-DAY                   PIC 9(2).
 
-       77 WS-EOF             PIC X(1) VALUE 'N'.
-       77 USER-INPUT         PIC X(1).
-       77 FILE-STATUS-CODE   PIC X(2).
-       77 FILE-EXISTS        PIC X(1) VALUE 'N'.
-       01 WS-LOW-KEY         PIC 9(10) VALUE ZEROS.
+       77 WS-EOF                               PIC X(1)    VALUE 'N'.
+       77 USER-INPUT                           PIC X(1).
+       77 FILE-STATUS-CODE                     PIC X(2).
+       77 FILE-EXISTS                          PIC X(1)    VALUE 'N'.
+       01 WS-LOW-KEY                           PIC 9(10)   VALUE ZEROS.
        01 WS-INPUT-TYPE                        PIC X(1).
          88 WS-VALID-TYPE                                  VALUE 'Y'.
          88 WS-INVALID-TYPE                                VALUE 'N'.
@@ -140,14 +140,14 @@
               DISPLAY " "
            
       * TELLS THE FILE POINTER WHERE THE START OF THE FILE IS
-           MOVE WS-LOW-KEY TO EMP-ID
-           START EMPLOYEE-FILE KEY >= EMP-ID
-               INVALID KEY 
-                   DISPLAY "NO RECORDS FOUND"
-                   MOVE 'Y' TO WS-EOF
-               NOT INVALID KEY 
-                   CONTINUE
-           END-START
+      *    MOVE WS-LOW-KEY TO EMP-ID
+      *    START EMPLOYEE-FILE KEY >= EMP-ID
+      *        INVALID KEY 
+      *            DISPLAY "NO RECORDS FOUND"
+      *            MOVE 'Y' TO WS-EOF
+      *        NOT INVALID KEY 
+      *            CONTINUE
+      *    END-START
              
            PERFORM UNTIL WS-EOF = 'Y'
            READ EMPLOYEE-FILE NEXT RECORD 
@@ -300,6 +300,7 @@
                WHEN OTHER
                  MOVE WS-EMP-AGE TO EMP-AGE
            END-EVALUATE
+           
 
            DISPLAY "(OPTIONAL) ENTER EMPLOYEE'S UNION FEE: "
             WITH NO ADVANCING 
@@ -378,4 +379,5 @@
            END-IF 
            CLOSE EMPLOYEE-FILE
            .
+
        END PROGRAM EMPLOYEE-MGMT.
