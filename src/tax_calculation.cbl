@@ -96,7 +96,7 @@
            END-IF.
 
       * Final Salary Display
-       MOVE Final-Salary TO Display-Final-Salary
-       DISPLAY "Final Salary : R " Display-Final-Salary.
+           MOVE Final-Salary TO Display-Final-Salary
+           DISPLAY "Final Salary : R " Display-Final-Salary.
 
-       STOP RUN.
+           STOP RUN.

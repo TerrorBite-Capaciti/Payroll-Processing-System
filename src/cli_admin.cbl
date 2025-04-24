@@ -17,6 +17,10 @@
            05 EMP-FINAL-SAL   PIC 9(7).
            05 EMP-BONUS      PIC 9(5).
 
+       01  INPUT-EMP-ID  PIC X(5).
+       01  AUTHENTICATED PIC X VALUE "N".
+           88 IS-AUTHENTICATED VALUE "Y".
+
        01 CURRENT-DATE.
            05 CURRENT-YEAR  PIC 9(4).
            05 CURRENT-MONTH  PIC 9(2).
@@ -26,9 +30,13 @@
 
        PROCEDURE DIVISION.
        MAIN-LOGIC.
-       ACCEPT CURRENT-DATE FROM DATE YYYYMMDD
-       PERFORM DISPLAY-MAIN-MENU
-       STOP RUN.
+           MOVE SPACES TO EMPLOYEE-DATA
+           MOVE ZEROS TO EMP-HOURS, EMP-BASE-SALARY, EMP-FINAL-SAL, 
+           EMP-BONUS
+           MOVE "N" TO AUTHENTICATED
+           ACCEPT CURRENT-DATE FROM DATE YYYYMMDD
+            PERFORM DISPLAY-MAIN-MENU
+           STOP RUN.
 
        DISPLAY-MAIN-MENU.
            DISPLAY"---------------------------------------------------".
@@ -71,20 +79,22 @@
             WHEN "Q" CONTINUE
             WHEN OTHER DISPLAY "Invalid choice, please try again!"
             END-EVALUATE
-       END-PERFORM.
+           END-PERFORM.
 
 
        ADD-EMPLOYEE.
+            MOVE 'N' TO AUTHENTICATED
            DISPLAY"ADD NEW EMPLOYEE"
            DISPLAY"Enter first name:"
            ACCEPT EMP-NAME
            DISPLAY"Enter surname:"
            ACCEPT EMP-SURNAME
-
-           PERFORM UNTIL EMP-ID > 0
+           
+           MOVE SPACES TO EMP-ID
+           PERFORM UNTIL EMP-ID NOT = SPACES
             DISPLAY "Enter employee ID (5 digits):"
             ACCEPT EMP-ID
-       END-PERFORM
+           END-PERFORM.
 
            DISPLAY "Enter birthdate (YYYY-MM-DD) :"
            ACCEPT EMP-BIRTHDATE
@@ -128,22 +138,36 @@
            ACCEPT UNION-FEE-ANSWER
 
            IF UNION-FEE-ANSWER = "Y" OR "y"
-               SUBTRACT 100 FROM EMP-FINAL-SAL
-               DISPLAY "Union fee of R100 deducted"
+               SUBTRACT 150 FROM EMP-FINAL-SAL
+               DISPLAY "Union fee of R150 deducted"
            END-IF
 
            DISPLAY"Final salary: R", EMP-FINAL-SAL.
 
       *view payslip
        VIEW-PAYSLIP.
+            IF NOT IS-AUTHENTICATED
+           DISPLAY "Access denied! Please authenticate first."
+           ELSE 
+            IF EMP-NAME = SPACES
+           DISPLAY "No payslip data available!"
+            ELSE
            DISPLAY "---------------------------------------------------"
-           DISPLAY "Name: ",EMP-NAME, " ", EMP-SURNAME
-           DISPLAY "ID: ", EMP-ID
+           DISPLAY "EMPLOYEE PAYSLIP (CONFIDENTIAL)"
+           DISPLAY "---------------------------------------------------"
+           DISPLAY "Name: ", FUNCTION TRIM(EMP-NAME), " ", 
+           FUNCTION TRIM(EMP-SURNAME)
+           DISPLAY "ID: ", FUNCTION TRIM(EMP-ID)
            DISPLAY "Position: ", EMP-POSITION
            DISPLAY "Hours worked: ", EMP-HOURS
            DISPLAY "Base salary: R", EMP-BASE-SALARY
            DISPLAY "BONUS: R", EMP-BONUS
-           DISPLAY "Final salary: R", EMP-FINAL-SAL.
+           DISPLAY "Final salary: R", EMP-FINAL-SAL
+            END-IF
+           END-IF.
+
+           
+           
 
        EMPLOYEE-MENU.
            PERFORM UNTIL USER-CHOICE = "Q"
@@ -151,21 +175,44 @@
             DISPLAY"         EMPLOYEE SELF-SERVICE                     "
            DISPLAY"----------------------------------------------------"
            DISPLAY"1. View my payslip"
-           DISPLAY"2. Return to Main Menu"
+           DISPLAY"Q. Return to Main Menu"
            DISPLAY"----------------------------------------------------"
            DISPLAY"Enter your choice: "
            ACCEPT USER-CHOICE
 
            EVALUATE USER-CHOICE
-            WHEN "1" PERFORM VIEW-PAYSLIP
+            WHEN "1" 
+            PERFORM AUTHENTICATE-EMPLOYEE
+            IF IS-AUTHENTICATED        
+             PERFORM VIEW-PAYSLIP
+             ELSE
+                DISPLAY "Authentication failed. Please try again."
+                END-IF
             WHEN "Q" CONTINUE
-            WHEN OTHER DISPLAY "Invalid choice, please try again."
+            WHEN OTHER 
+            DISPLAY "Invalid choice, please try again."
             END-EVALUATE
             END-PERFORM.
+           
+       AUTHENTICATE-EMPLOYEE.
+            MOVE "N" TO AUTHENTICATED
+            DISPLAY "Enter your Employee ID:"
+            ACCEPT INPUT-EMP-ID
+
+            *>simple validation for employee id
+            IF INPUT-EMP-ID = EMP-ID
+                MOVE "Y" TO AUTHENTICATED
+                DISPLAY "Authentication successful."
+            ELSE
+                DISPLAY "Invalid Employee ID."
+            END-IF.
+            DISPLAY "--------------------------------------------------"
+            
 
 
 
 
-
-           PERFORM DISPLAY-MAIN-MENU
-           STOP RUN.
+           DISPLAY "Thank you for using the Byte Bank Payroll System."
+           DISPLAY "--------------------------------------------------"
+           DISPLAY "Press any key to return to the main menu."
+           ACCEPT USER-CHOICE.
