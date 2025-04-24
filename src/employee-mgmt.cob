@@ -263,6 +263,21 @@
               WITH NO ADVANCING 
            ACCEPT WS-EMP-BIRTH-DATE
 
+      *    EVALUATE WS-EMP-BIRTH-DATE
+           EVALUATE TRUE
+              WHEN WS-EMP-BIRTH-DATE < 1 OR WS-EMP-BIRTH-DATE > 31
+                 DISPLAY "BIRTH DATE MUST BE BETWEEN 01 AND 31"
+                 DISPLAY "PLEASE TRY AGAIN"
+                 DISPLAY " "
+              WHEN WS-EMP-BIRTH-DATE IS NOT NUMERIC
+                 DISPLAY "BIRTH DATE MUST BE A NUMBER"
+                 DISPLAY " "
+              WHEN OTHER
+                 SET WS-VALID-TYPE TO TRUE
+              END-EVALUATE
+           END-PERFORM
+             SET WS-INVALID-TYPE TO TRUE
+      ******************************************************************
       * CALCULATING EMPLOYEE'S AGE
            MOVE FUNCTION CURRENT-DATE(1:4) TO WS-CURRENT-YEAR
            MOVE FUNCTION CURRENT-DATE(5:6) TO WS-CURRENT-MONTH 
