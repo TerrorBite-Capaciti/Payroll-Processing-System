@@ -1,201 +1,171 @@
-      ******************************************************************
-      * Author: TerrorBite CAPACITI (BYTE BANK)
-      * Date: 04 APRIL 2025
-      * Purpose: PAYROLL SYSTEM
-      * Compiler: cobc
-      ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. BYTEBANK-PAYROLL.
-
        ENVIRONMENT DIVISION.
-
        DATA DIVISION.
 
        WORKING-STORAGE SECTION.
-       01 USER-CHOICE    PIC X.
-       01 EMPLOYEE-NAME       PIC X(30).
-       01 EMPLOYEE-SURNAME    PIC X(30).
-       01 EMPLOYEE-ID         PIC 9(5).
-       01 EMPLOYEE-BIRTHDAY   PIC X(10).
-       01 EMPLOYEE-POSITION   PIC X(15).
-       01 HOURS-WORKED         PIC 9(3).
-       01 BASE-SALARY          PIC 9(6).
-       01 FINAL-SALARY         PIC 9(7).
-       01 BIRTHDAY-BONUS      PIC 9(5) VALUE 0.
-       01 UNION-FEE            PIC 9 VALUE 0.
-       01  UNION-FEE-ANSWER      PIC X.
-       01 CURRENT-MONTH        PIC 9(2).
-       01 BIRTHDAY-MONTH       PIC 9(2).
-       01 BIRTHDAY-DAY         PIC 9(2).
+       01 USER-CHOICE PIC X.
+
+       01 EMPLOYEE-DATA.
+           05 EMP-NAME PIC X(30).
+           05 EMP-SURNAME    PIC X(30).
+           05 EMP-ID         PIC X(5).
+           05 EMP-BIRTHDATE  PIC X(10). *>YYYY-MM-DD
+           05 EMP-POSITION  PIC X(15). *>LOW/INTERMEDIATE/SENIOR
+           05 EMP-HOURS      PIC 9(3).
+           05 EMP-BASE-SALARY PIC 9(6).
+           05 EMP-FINAL-SAL   PIC 9(7).
+           05 EMP-BONUS      PIC 9(5).
+
+       01 CURRENT-DATE.
+           05 CURRENT-YEAR  PIC 9(4).
+           05 CURRENT-MONTH  PIC 9(2).
+           05 CURRENT-DAY  PIC 9(2).
+
+        01 UNION-FEE-ANSWER     PIC X.
 
        PROCEDURE DIVISION.
-       DISPLAY-INTRO.
+       MAIN-LOGIC.
+       ACCEPT CURRENT-DATE FROM DATE YYYYMMDD
+       PERFORM DISPLAY-MAIN-MENU
+       STOP RUN.
 
-           DISPLAY "--------------------------------------------------".
-           DISPLAY "            WELCOME TO BYTE-BANK PAYROLL SYSTEM   ".
-           DISPLAY "--------------------------------------------------".
-           DISPLAY " ".
-           DISPLAY "Please select your role:".
-           DISPLAY "1. Admin Login".
-           DISPLAY "2. Employee Login".
-           DISPLAY " ".
-           DISPLAY "Enter your choice: ".
-           ACCEPT USER-CHOICE.
+       DISPLAY-MAIN-MENU.
+           DISPLAY"---------------------------------------------------".
+           DISPLAY"BYTE-BANK PAYROLL SYSTEM MAIN MENU                 ".
+           DISPLAY"---------------------------------------------------".
+           DISPLAY"1. Admin Functions"
+           DISPLAY"2. Employee Functions"
+           DISPLAY"Q. Quit"
+           DISPLAY"----------------------------------------------------"
+           DISPLAY"Enter your choice:"
+           ACCEPT USER-CHOICE
+
 
            EVALUATE USER-CHOICE
-            WHEN "1"
-                PERFORM ADMIN-MENU
-            WHEN "2"
-                PERFORM EMPLOYEE-MENU
-            WHEN OTHER
-              DISPLAY "Invalid selection. Please run the progarm again."
-           END-EVALUATE.
-           STOP RUN.
+             WHEN "1" PERFORM ADMIN-MENU
+             WHEN "2" PERFORM EMPLOYEE-MENU
+             WHEN "Q" DISPLAY "Goodbye!"
+             WHEN OTHER DISPLAY "Invalid choice, please try again."
+             END-EVALUATE.
 
+
+      *admin menu
        ADMIN-MENU.
-            PERFORM UNTIL USER-CHOICE ="5"
-           DISPLAY"___________________________________________________".
-           DISPLAY"            BYTE-BANK ADMIN MENU                   ".
-           DISPLAY"___________________________________________________".
-           DISPLAY"1. Add New Employee".
-           DISPLAY"2. Process Payroll".
-           DISPLAY"3. View Employee Payslip".
-           DISPLAY"4. View All Employees Report".
-           DISPLAY"5. Exit".
-           DISPLAY"___________________________________________________".
-            DISPLAY " ".
-           DISPLAY"Enter your choice : "
+           PERFORM UNTIL USER-CHOICE = "Q"
+            DISPLAY"---------------------------------------------------"
+            DISPLAY"ADMINISTARTOR FUNCTIONS                            "
+            DISPLAY"---------------------------------------------------"
+            DISPLAY"1. Add Employee"
+            DISPLAY"2. Process Payroll"
+            DISPLAY"3. View Payslip"
+            DISPLAY"Q. Return to Main Menu"
+            DISPLAY"---------------------------------------------------"
+            DISPLAY"Enter your choice:"
+            ACCEPT USER-CHOICE
+
+            EVALUATE USER-CHOICE
+            WHEN "1" PERFORM ADD-EMPLOYEE
+            WHEN "2" PERFORM PROCESS-PAYROLL
+            WHEN "3" PERFORM VIEW-PAYSLIP
+            WHEN "Q" CONTINUE
+            WHEN OTHER DISPLAY "Invalid choice, please try again!"
+            END-EVALUATE
+       END-PERFORM.
+
+
+       ADD-EMPLOYEE.
+           DISPLAY"ADD NEW EMPLOYEE"
+           DISPLAY"Enter first name:"
+           ACCEPT EMP-NAME
+           DISPLAY"Enter surname:"
+           ACCEPT EMP-SURNAME
+
+           PERFORM UNTIL EMP-ID > 0
+            DISPLAY "Enter employee ID (5 digits):"
+            ACCEPT EMP-ID
+       END-PERFORM
+
+           DISPLAY "Enter birthdate (YYYY-MM-DD) :"
+           ACCEPT EMP-BIRTHDATE
+
+
+           DISPLAY "Enter position (low/intermediate/senior) :"
+           ACCEPT EMP-POSITION
+
+           DISPLAY "Enter hours worked this month: "
+           ACCEPT EMP-HOURS
+
+           DISPLAY "Employee added successfully!".
+
+      *salary calculation
+       CALCULATE-SALARY.
+           *> set base salary based on POSITION
+           EVALUATE EMP-POSITION
+            WHEN "Low"   MOVE 10000 TO EMP-BASE-SALARY
+            WHEN "Intermediate"  MOVE 50000 TO EMP-BASE-SALARY
+            WHEN "Senior" MOVE 100000 TO EMP-BASE-SALARY
+           END-EVALUATE
+
+           *> calculate final salary (base * hours/ standard work hours)
+           COMPUTE EMP-FINAL-SAL =EMP-BASE-SALARY * EMP-HOURS / 8
+
+           *> check for birthday bonus
+           IF EMP-BIRTHDATE(6:2) = CURRENT-MONTH
+                MOVE 500 TO EMP-BONUS
+                ADD EMP-BONUS TO EMP-FINAL-SAL
+           END-IF.
+
+      *process payroll
+       PROCESS-PAYROLL.
+           DISPLAY" PROCESS PAYROLL"
+           DISPLAY"Enter employee ID:"
+           ACCEPT EMP-ID
+
+           PERFORM CALCULATE-SALARY
+
+           DISPLAY"Process union fee (Y/N) :"
+           ACCEPT UNION-FEE-ANSWER
+
+           IF UNION-FEE-ANSWER = "Y" OR "y"
+               SUBTRACT 100 FROM EMP-FINAL-SAL
+               DISPLAY "Union fee of R100 deducted"
+           END-IF
+
+           DISPLAY"Final salary: R", EMP-FINAL-SAL.
+
+      *view payslip
+       VIEW-PAYSLIP.
+           DISPLAY "---------------------------------------------------"
+           DISPLAY "Name: ",EMP-NAME, " ", EMP-SURNAME
+           DISPLAY "ID: ", EMP-ID
+           DISPLAY "Position: ", EMP-POSITION
+           DISPLAY "Hours worked: ", EMP-HOURS
+           DISPLAY "Base salary: R", EMP-BASE-SALARY
+           DISPLAY "BONUS: R", EMP-BONUS
+           DISPLAY "Final salary: R", EMP-FINAL-SAL.
+
+       EMPLOYEE-MENU.
+           PERFORM UNTIL USER-CHOICE = "Q"
+            DISPLAY"---------------------------------------------------"
+            DISPLAY"         EMPLOYEE SELF-SERVICE                     "
+           DISPLAY"----------------------------------------------------"
+           DISPLAY"1. View my payslip"
+           DISPLAY"2. Return to Main Menu"
+           DISPLAY"----------------------------------------------------"
+           DISPLAY"Enter your choice: "
            ACCEPT USER-CHOICE
 
            EVALUATE USER-CHOICE
-            WHEN "1"
-                PERFORM ADD-EMPLOYEE
-      * Code to add new employee goes here
-            WHEN "2"
-               PERFORM PROCESS-PAYROLL
-      * Code to process payroll goes here
-            WHEN "3"
-                PERFORM VIEW-PAYROLL
-      * Code to view payslip goes here
-            WHEN "4"
-                PERFORM VIEW-REPORT
-      * Code to view employee reports goes here
-            WHEN "5"
-                DISPLAY "Exiting program."
-            WHEN OTHER
-                DISPLAY "Invalid selection. Please select between 1-5."
-             END-EVALUATE
-        END-PERFORM.
+            WHEN "1" PERFORM VIEW-PAYSLIP
+            WHEN "Q" CONTINUE
+            WHEN OTHER DISPLAY "Invalid choice, please try again."
+            END-EVALUATE
+            END-PERFORM.
 
+
+
+
+
+           PERFORM DISPLAY-MAIN-MENU
            STOP RUN.
-
-    ADD-EMPLOYEE.
-           DISPLAY "Add Employee".
-         DISPLAY "Enter Employee Name: ".
-           ACCEPT EMPLOYEE-NAME.
-           DISPLAY "Enter Employee Surname: ".
-           ACCEPT EMPLOYEE-SURNAME.
-           DISPLAY "Enter Employee ID: ".
-           ACCEPT EMPLOYEE-ID.
-           DISPLAY "Enter Employee Birthday (YYYY-MM-DD): ".
-           ACCEPT EMPLOYEE-BIRTHDAY.
-           DISPLAY "Enter Employee Position (Low/Intermediate/Senior):".
-           ACCEPT EMPLOYEE-POSITION.
-           DISPLAY "Enter hours worked: ".
-           ACCEPT HOURS-WORKED.
-
-      * Extract month and day from birthday for bonus check
-             UNSTRING EMPLOYEE-BIRTHDAY DELIMITED BY "-"
-            INTO BIRTHDAY-MONTH BIRTHDAY-DAY
-        END-UNSTRING
-
-      * Check if birthday is in the current month
-           IF BIRTHDAY-MONTH = CURRENT-MONTH THEN
-               MOVE 500 TO BIRTHDAY-BONUS
-           END-IF.
-
-      * Assign salary based on position
-           IF EMPLOYEE-POSITION = "Intern" THEN
-               MOVE 10000 TO BASE-SALARY
-           ELSE IF EMPLOYEE-POSITION = "Intermediate" THEN
-               MOVE 50000 TO BASE-SALARY
-           ELSE IF EMPLOYEE-POSITION = "Senior" THEN
-               MOVE 100000 TO BASE-SALARY
-           ELSE
-               DISPLAY "Invalid Position"
-           END-IF.
-
-      * Calculate final salary with birthday bonus
-           COMPUTE FINAL-SALARY = BASE-SALARY * HOURS-WORKED / 8 +
-          BIRTHDAY-BONUS.
-
-           DISPLAY "Employee added successfully with salary: R"
-           FINAL-SALARY.
-
-
-       PROCESS-PAYROLL.
-           DISPLAY "Process Payroll..".
-            DISPLAY "Enter Employee Name: ".
-           ACCEPT EMPLOYEE-NAME.
-           DISPLAY "Enter Employee ID: ".
-           ACCEPT EMPLOYEE-ID.
-
-      * Salary calculation logic
-           DISPLAY"Enter Employee Position (Low/Intermediate/Senior):".
-
-           ACCEPT EMPLOYEE-POSITION.
-           DISPLAY "Enter hours worked: ".
-           ACCEPT HOURS-WORKED.
-
-           IF EMPLOYEE-POSITION = "Intern" THEN
-               MOVE 10000 TO BASE-SALARY
-           ELSE IF EMPLOYEE-POSITION = "Intermediate" THEN
-               MOVE 50000 TO BASE-SALARY
-           ELSE IF EMPLOYEE-POSITION = "Senior" THEN
-               MOVE 100000 TO BASE-SALARY
-           ELSE
-               DISPLAY "Invalid Position"
-           END-IF.
-
-      * Calculate final salary with birthday bonus
-           COMPUTE FINAL-SALARY = BASE-SALARY * HOURS-WORKED / 8 +
-           -BIRTHDAY-BONUS.
-           DISPLAY "Employee Salary: R" FINAL-SALARY.
-
-      * Prompt for union fee
-           DISPLAY "Do you want to pay the union fee (Y/N)? ".
-           ACCEPT UNION-FEE-ANSWER
-
-           IF UNION-FEE = "Y" THEN
-               DISPLAY "Union fee deducted from salary."
-               COMPUTE FINAL-SALARY = FINAL-SALARY - 100.
-           END-IF.
-
-       VIEW-PAYSLIP.
-           DISPLAY "View Payslip functionality coming soon...".
-
-       VIEW-REPORT.
-           DISPLAY "View All Employees Report  coming soon.".
-
-       EMPLOYEE-MENU.
-           DISPLAY"___________________________________________________".
-           DISPLAY"            BYTE-BANK EMPLOYEE MENU                ".
-           DISPLAY"___________________________________________________".
-           DISPLAY"1. View Employee Payslip".
-           DISPLAY"2. View All Employees Report".
-           DISPLAY"3. Exit".
-           DISPLAY"___________________________________________________".
-           DISPLAY "Please select an option (1-3): ".
-           ACCEPT USER-CHOICE.
-           EVALUATE USER-CHOICE
-            WHEN 1
-                DISPLAY "View Employee Payslip Functionality."
-      * Code to view payslip goes here
-            WHEN 2
-                DISPLAY "View All Employees Report Functionality."
-      * Code to view reports goes here
-            WHEN 3
-                DISPLAY "Exiting program."
-            WHEN OTHER
-                DISPLAY "Invalid selection. Please select between 3-5."
-           END-EVALUATE.
