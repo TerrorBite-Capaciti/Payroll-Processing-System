@@ -59,6 +59,9 @@
        77 FILE-STATUS-CODE   PIC X(2).
        77 FILE-EXISTS        PIC X(1) VALUE 'N'.
        01 WS-LOW-KEY         PIC 9(10) VALUE ZEROS.
+       01 WS-INPUT-TYPE                        PIC X(1).
+         88 WS-VALID-TYPE                                  VALUE 'Y'.
+         88 WS-INVALID-TYPE                                VALUE 'N'.
 
        PROCEDURE DIVISION.
        BEGIN.
