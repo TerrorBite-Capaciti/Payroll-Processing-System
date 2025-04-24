@@ -175,6 +175,11 @@
       *****************************************************************
        ADD-NEW-EMPLOYEE.
            OPEN I-O EMPLOYEE-FILE
+
+           DISPLAY " "
+           DISPLAY "ENTER EMPLOYEE'S ID: " WITH NO ADVANCING 
+           ACCEPT WS-EMP-ID
+
            DISPLAY "ENTER EMPLOYEE'S FIRST NAME: " WITH NO ADVANCING 
            ACCEPT WS-EMP-NAME
 
@@ -204,6 +209,8 @@
             WITH NO ADVANCING 
            ACCEPT WS-EMP-UNION-FEE
 
+      * MOVE VARS TO PREPARE FOR FILE WRITE
+           MOVE WS-EMP-ID                TO EMP-ID
            MOVE WS-EMP-NAME              TO EMP-NAME
            MOVE WS-EMP-SURNAME           TO EMP-SURNAME
            MOVE WS-EMP-POSITION-TYPE     TO EMP-POSITION-TYPE
