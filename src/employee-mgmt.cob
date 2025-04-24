@@ -49,6 +49,11 @@
       *****   THIS IS AN OPTIONAL DATA-ITEM    ****
            05  WS-EMP-UNION-FEE                PIC 9(5).
 
+       01 WS-CURRENT-DATE.
+           05 WS-CURRENT-YEAR                  PIC 9(4).
+           05 WS-CURRENT-MONTH                 PIC 9(2).
+           05 WS-CURRENT-DAY                   PIC 9(2).
+
        77 WS-EOF             PIC X(1) VALUE 'N'.
        77 USER-INPUT         PIC X(1).
        77 FILE-STATUS-CODE   PIC X(2).
