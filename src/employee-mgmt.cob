@@ -243,6 +243,22 @@
               WITH NO ADVANCING 
            ACCEPT WS-EMP-BIRTH-MONTH
 
+      *    EVALUATE WS-EMP-BIRTH-MONTH
+           EVALUATE TRUE
+              WHEN WS-EMP-BIRTH-MONTH < 1 OR WS-EMP-BIRTH-MONTH > 12
+                 DISPLAY "BIRTH MONTH MUST BE BETWEEN 01 AND 12"
+                 DISPLAY "PLEASE TRY AGAIN"
+                 DISPLAY " "
+              WHEN WS-EMP-BIRTH-MONTH IS NOT NUMERIC
+                 DISPLAY "BIRTH MONTH MUST BE A NUMBER"
+                 DISPLAY " "
+              WHEN OTHER
+                 SET WS-VALID-TYPE TO TRUE
+              END-EVALUATE
+           END-PERFORM
+           SET WS-INVALID-TYPE TO TRUE
+      ********************************DAY*******************************
+           PERFORM UNTIL WS-VALID-TYPE
            DISPLAY "ENTER EMPLOYEE'S BIRTH DATE (DD): " 
               WITH NO ADVANCING 
            ACCEPT WS-EMP-BIRTH-DATE
