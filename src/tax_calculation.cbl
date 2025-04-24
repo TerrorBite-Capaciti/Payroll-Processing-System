@@ -41,48 +41,48 @@
 
       *Step 2:  the Employee's Salary
            DISPLAY "Enter employee salary (Rands): ".
-       ACCEPT Employee-Salary.
+           ACCEPT Employee-Salary.
 
       *Step 3: Apply Tax Calculation Logic
-       IF Employee-Salary <= 195850 THEN
+           IF Employee-Salary <= 195850 THEN
            MOVE 18 TO Tax-Rate
-       ELSE IF Employee-Salary <= 305850 THEN
+           ELSE IF Employee-Salary <= 305850 THEN
            MOVE 26 TO Tax-Rate
-       ELSE IF Employee-Salary <= 423300 THEN
+           ELSE IF Employee-Salary <= 423300 THEN
            MOVE 31 TO Tax-Rate
-       ELSE IF Employee-Salary <= 555600 THEN
+           ELSE IF Employee-Salary <= 555600 THEN
            MOVE 36 TO Tax-Rate
-       ELSE IF Employee-Salary <= 708310 THEN
+           ELSE IF Employee-Salary <= 708310 THEN
            MOVE 39 TO Tax-Rate
-       ELSE
+           ELSE
            MOVE 41 TO Tax-Rate
-       END-IF.
+           END-IF.
 
       *Step 4: Calculate Tax
-       COMPUTE Tax-Amount = (Employee-Salary * Tax-Rate) / 100.
+           COMPUTE Tax-Amount = (Employee-Salary * Tax-Rate) / 100.
 
       *Step 5:Calculate Final Salary after Tax Deduction
-       COMPUTE Final-Salary = Employee-Salary - Tax-Amount.
+           COMPUTE Final-Salary = Employee-Salary - Tax-Amount.
 
-       MOVE Employee-Salary TO WS-Formatted-Salary
-       MOVE Tax-Amount      TO WS-Formatted-Tax
-       MOVE Final-Salary    TO WS-Formatted-Final
+           MOVE Employee-Salary TO WS-Formatted-Salary
+           MOVE Tax-Amount      TO WS-Formatted-Tax
+           MOVE Final-Salary    TO WS-Formatted-Final
 
       *Step 6: Display Tax and Final Salary
-       DISPLAY "Employee Salary: R" WS-Formatted-Salary.
-       DISPLAY "Tax Rate: " Tax-Rate "%".
-       DISPLAY "Tax Amount: R" WS-Formatted-Tax.
-       DISPLAY "Final Salary after Tax: R" WS-Formatted-Final.
+            DISPLAY "Employee Salary: R" WS-Formatted-Salary.
+            DISPLAY "Tax Rate: " Tax-Rate "%".
+            DISPLAY "Tax Amount: R" WS-Formatted-Tax.
+            DISPLAY "Final Salary after Tax: R" WS-Formatted-Final.
 
       * Step 7: Optional: Apply Union Fee or Birthday Bonus
-       DISPLAY "Do you want to apply Union Fee of R150? (Y/N): ".
-       ACCEPT User-Input.
-       IF User-Input = "Y" OR User-Input = "y" THEN
+            DISPLAY "Do you want to apply Union Fee of R150? (Y/N): ".
+           ACCEPT User-Input.
+           IF User-Input = "Y" OR User-Input = "y" THEN
            COMPUTE Final-Salary = Final-Salary - Union-Fee
-       END-IF.
+           END-IF.
 
       * Ask for birthday and apply bonus if today
-       DISPLAY "Enter employee birth day (DD): ".
+           DISPLAY "Enter employee birth day (DD): ".
            ACCEPT Birth-Day.
            DISPLAY "Enter employee birth month (MM): ".
            ACCEPT Birth-Month.
