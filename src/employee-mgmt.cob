@@ -215,10 +215,30 @@
               END-EVALUATE
               
            END-PERFORM    
-           DISPLAY "ENTER EMPLOYEE'S BIRTH YEAR (YYYY): " 
-              WITH NO ADVANCING   
-           ACCEPT WS-EMP-BIRTH-YEAR
 
+      * ENSURING PROPER INPUT FOR BIRTHDATE
+           SET WS-INVALID-TYPE TO TRUE
+           PERFORM UNTIL WS-VALID-TYPE
+           DISPLAY "ENTER EMPLOYEE'S BIRTH YEAR (YYYY): " 
+              WITH NO ADVANCING 
+           ACCEPT WS-EMP-BIRTH-YEAR
+      *******************************YEAR*******************************
+      *    EVALUATE WS-EMP-BIRTH-YEAR
+           EVALUATE TRUE
+            WHEN WS-EMP-BIRTH-YEAR < 1900 OR WS-EMP-BIRTH-YEAR > 2007
+                 DISPLAY "BIRTH YEAR MUST BE BETWEEN 1900 AND 2007"
+                 DISPLAY "PLEASE TRY AGAIN"
+                 DISPLAY " "
+              WHEN WS-EMP-BIRTH-MONTH IS NOT NUMERIC
+                 DISPLAY "BIRTH MONTH MUST BE A NUMBER"
+                 DISPLAY " "
+              WHEN OTHER
+                 SET WS-VALID-TYPE TO TRUE
+              END-EVALUATE
+           END-PERFORM
+      *******************************MONTH******************************
+           SET WS-INVALID-TYPE TO TRUE
+           PERFORM UNTIL WS-VALID-TYPE
            DISPLAY "ENTER EMPLOYEE'S BIRTH MONTH (MM): " 
               WITH NO ADVANCING 
            ACCEPT WS-EMP-BIRTH-MONTH
