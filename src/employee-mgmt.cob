@@ -193,11 +193,28 @@
 
            DISPLAY "ENTER EMPLOYEE'S SURNAME: " WITH NO ADVANCING 
            ACCEPT WS-EMP-SURNAME
-
+     
+           PERFORM UNTIL WS-VALID-TYPE
            DISPLAY "ENTER EMPLOYEE'S POSITION TYPE (INTERN, "
            "INTERMEDIATE, SENIOR): " WITH NO ADVANCING 
+           
            ACCEPT WS-EMP-POSITION-TYPE
 
+              EVALUATE WS-EMP-POSITION-TYPE
+                  WHEN "INTERN"
+                    SET WS-VALID-TYPE TO TRUE
+                  WHEN "INTERMEDIATE"
+                    SET WS-VALID-TYPE TO TRUE
+                  WHEN "SENIOR"
+                    SET WS-VALID-TYPE TO TRUE
+                  WHEN OTHER 
+                    DISPLAY "POSITION TYPE MUST BE INTERN, INTERMEDIATE"
+                    " OR SENIOR"
+                    DISPLAY "PLEASE TRY AGAIN"
+                    DISPLAY " "
+              END-EVALUATE
+              
+           END-PERFORM    
            DISPLAY "ENTER EMPLOYEE'S BIRTH YEAR (YYYY): " 
               WITH NO ADVANCING   
            ACCEPT WS-EMP-BIRTH-YEAR
