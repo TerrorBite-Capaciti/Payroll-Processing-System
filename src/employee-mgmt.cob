@@ -161,7 +161,7 @@
                  DISPLAY "UNION FEE: " EMP-UNION-FEE
                  DISPLAY "============================================="
            END-READ
-           CLOSE EMPLOYEE-FILE
+      *    CLOSE EMPLOYEE-FILE
            END-PERFORM
            
            ELSE
@@ -169,6 +169,7 @@
                  FILE-STATUS-CODE
               GOBACK
            END-IF
+           CLOSE EMPLOYEE-FILE
            .
       *****************************************************************
       *****************************************************************
