@@ -1,0 +1,7 @@
+ID  NAME POSITION SALARY  TAX MEDICAL
+-----  ------------- --------  ------
+12345 Nizaam Hafejjee               Developer           R   35,000.0 25.00 YES
+89896 Ayanda Radebe                 Software Dev        R   40,000.0 30.00 YES
+78978 Lefa Jele                     QA Tester           R   30,000.0 20.00 NO
+45645 Silindile Shabangu            Analyst             R   32,000.0 25.00 YES
+12312 Sisamkele Vava                Admin Assistant     R   28,000.0 18.00 NO
