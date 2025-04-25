@@ -1,0 +1,60 @@
+===============================
+Employee ID:      1234567890
+Name:             Silindile
+Surname:          Shabangu
+Position Type:  Manager
+Hours Worked:     160
+Overtime Hours:   10
+Hourly Rate:      R10000
+Bonus:            R000000
+Tax Deduction:    R150000
+Leave Deduction: R030000
+Benefits:         R120000
+Gross Pay:        R01750000
+Net Pay:          R01690000
+===============================
+===============================
+Employee ID:      2345678901
+Name:             Thabo
+Surname:          Mokoena
+Position Type:  Senior
+Hours Worked:     170
+Overtime Hours:   05
+Hourly Rate:      R07000
+Bonus:            R050000
+Tax Deduction:    R120000
+Leave Deduction: R020000
+Benefits:         R100000
+Gross Pay:        R01292500
+Net Pay:          R01252500
+===============================
+===============================
+Employee ID:      3456789012
+Name:             Nomvula
+Surname:          Dlamini
+Position Type:  Intern
+Hours Worked:     150
+Overtime Hours:   08
+Hourly Rate:      R05000
+Bonus:            R000000
+Tax Deduction:    R080000
+Leave Deduction: R010000
+Benefits:         R090000
+Gross Pay:        R00810000
+Net Pay:          R00810000
+===============================
+===============================
+Employee ID:      3456789012
+Name:             Nomvula
+Surname:          Dlamini
+Position Type:  Intern
+Hours Worked:     150
+Overtime Hours:   08
+Hourly Rate:      R05000
+Bonus:            R000000
+Tax Deduction:    R080000
+Leave Deduction: R010000
+Benefits:         R090000
+Gross Pay:        R00810000
+Net Pay:          R00810000
+===============================
