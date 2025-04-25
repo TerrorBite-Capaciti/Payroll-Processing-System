@@ -103,7 +103,7 @@
                   WHEN 2
 
                        MOVE 23456 TO EMP-ID
-                       MOVE "Thabo" TO EMP-NAME
+                       MOVE "Thab" TO EMP-NAME
                        MOVE "Mokoena" TO EMP-SURNAME
                        MOVE "Senior" TO EMP-POSITION-TYPE
                        MOVE "1985" TO EMP-BIRTH-YEAR
