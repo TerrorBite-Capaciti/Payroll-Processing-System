@@ -1,109 +1,96 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. PAYROLL.
-       AUTHOR. BYTEBANK-DEV.
+       AUTHOR. Sisamkele Vava.
+       DATE-WRITTEN. 2025-04-25.
 
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT PAYSLIP-FILE ASSIGN TO "PAYSLIP.DAT"
-               ORGANIZATION IS SEQUENTIAL
-               ACCESS MODE IS SEQUENTIAL
-               FILE STATUS IS WS-FILE-STATUS.
+           SELECT PAYROLL-FILE ASSIGN TO "payroll.dat"
+               ORGANIZATION IS LINE SEQUENTIAL.
 
        DATA DIVISION.
        FILE SECTION.
-       FD  PAYSLIP-FILE.
-       01  PAYSLIP-RECORD.
-           05  EMP-ID               PIC X(10).
-           05  BASIC-SALARY         PIC 9(6)V99.
-           05  OVERTIME-PAY         PIC 9(6)V99.
-           05  BONUS-AMOUNT         PIC 9(6)V99.
-           05  GROSS-SALARY         PIC 9(6)V99.
-           05  TAX-DEDUCTION        PIC 9(6)V99.
-           05  LEAVE-DEDUCTION      PIC 9(6)V99.
-           05  NET-SALARY           PIC 9(6)V99.
+       FD PAYROLL-FILE.
+       01 PAYROLL-RECORD.
+           05 EMP-ID        PIC 9(5).
+           05 EMP-NAME      PIC A(30).
+           05 EMP-SURNAME   PIC A(30).
+           05 EMP-POSITION  PIC A(20).
+           05 EMP-BIRTH-DATE.
+               10 BIRTH-YEAR   PIC 9(4).
+               10 BIRTH-MONTH  PIC 99.
+               10 BIRTH-DAY    PIC 99.
+           05 HOURS-WORKED   PIC 9(5)V99.
+           05 OVERTIME-HOURS PIC 9(5)V99.
+           05 HOURLY-RATE    PIC 9(5)V99.
+           05 BONUS          PIC 9(5)V99.
+           05 GROSS-SALARY   PIC 9(6)V99.
+           05 UIF-DEDUCTION  PIC 9(5)V99.
+           05 PAYE-DEDUCTION PIC 9(5)V99.
+           05 PENSION-DEDUCTION PIC 9(5)V99.
+           05 GROSS-PAY      PIC 9(6)V99.
+           05 NET-PAY        PIC 9(6)V99.
 
        WORKING-STORAGE SECTION.
-       01  WS-FILE-STATUS           PIC XX.
-       01  WS-USER-ROLE             PIC X(1).
-       01  WS-EMP-ID                PIC X(10).
-       01  WS-BASIC-SALARY          PIC 9(6)V99 VALUE 0.
-       01  WS-HOURS-WORKED          PIC 9(3) VALUE 0.
-       01  WS-OVERTIME-HOURS        PIC 9(3) VALUE 0.
-       01  WS-BONUS                 PIC 9(6)V99 VALUE 0.
-       01  WS-LEAVE-DAYS            PIC 99 VALUE 0.
+       01 EOF-FLAG          PIC X VALUE "N".
+       01 UIF-RATE          PIC 9(2)V99 VALUE 0.01.       *> UIF Rate (1% of salary)
+       01 PAYE-TAXABLE-THRESHOLD PIC 9(6)V99 VALUE 225000. *> Example tax threshold per year
+       01 PAYE-BRACKET-RATE    PIC 9(2)V99 VALUE 0.18.    *> PAYE tax rate (18% for income above R225k/year)
+       01 PENSION-CONTRIBUTION  PIC 9(2)V99 VALUE 0.07.    *> Pension contribution (7%)
 
-       01  WS-HOURLY-RATE           PIC 9(4)V99 VALUE 100.00.
-       01  WS-OVERTIME-RATE         PIC 9(4)V99 VALUE 150.00.
-       01  WS-LEAVE-DEDUCT-RATE     PIC 9(4)V99 VALUE 100.00.
+       PROCEDURE DIVISION.
 
-       01  WS-TAX-RATE              PIC V9999 VALUE 0.1500.  *> 15%
-       01  WS-GROSS-SALARY          PIC 9(6)V99.
-       01  WS-TAX-DEDUCTION         PIC 9(6)V99.
-       01  WS-LEAVE-DEDUCTION       PIC 9(6)V99.
-       01  WS-NET-SALARY            PIC 9(6)V99.
+       OPEN INPUT PAYROLL-FILE.
 
-       LINKAGE SECTION.
-       01  LK-USER-ROLE             PIC X(1).
-       01  LK-EMP-ID                PIC X(10).
+       PERFORM READ-RECORD UNTIL EOF-FLAG = "Y".
 
-       PROCEDURE DIVISION USING LK-USER-ROLE LK-EMP-ID.
-       MAIN-PROCEDURE.
-           MOVE LK-USER-ROLE TO WS-USER-ROLE
-           MOVE LK-EMP-ID TO WS-EMP-ID
+       CLOSE PAYROLL-FILE.
 
-           PERFORM 100-GET-EMPLOYEE-INPUT
-           PERFORM 200-CALCULATE-SALARY
-           PERFORM 300-WRITE-PAYSLIP
-           PERFORM 400-DISPLAY-PAYSLIP
+       STOP RUN.
 
-           GOBACK.
+       READ-RECORD.
+           READ PAYROLL-FILE INTO PAYROLL-RECORD
+               AT END
+                   MOVE "Y" TO EOF-FLAG
+               NOT AT END
+                   PERFORM PROCESS-PAYROLL
+           END-READ.
 
-       100-GET-EMPLOYEE-INPUT.
-           DISPLAY "Enter total hours worked: "
-           ACCEPT WS-HOURS-WORKED
-
-           DISPLAY "Enter overtime hours: "
-           ACCEPT WS-OVERTIME-HOURS
-
-           DISPLAY "Enter bonus amount: "
-           ACCEPT WS-BONUS
-
-           DISPLAY "Enter unpaid leave days: "
-           ACCEPT WS-LEAVE-DAYS.
-
-       200-CALCULATE-SALARY.
-           COMPUTE WS-BASIC-SALARY = WS-HOURS-WORKED * WS-HOURLY-RATE
-           COMPUTE OVERTIME-PAY = WS-OVERTIME-HOURS * WS-OVERTIME-RATE
-           MOVE WS-BONUS TO BONUS-AMOUNT
-
-           COMPUTE WS-GROSS-SALARY = WS-BASIC-SALARY + OVERTIME-PAY + BONUS-AMOUNT
-           COMPUTE WS-TAX-DEDUCTION = WS-GROSS-SALARY * WS-TAX-RATE
-           COMPUTE WS-LEAVE-DEDUCTION = WS-LEAVE-DAYS * WS-LEAVE-DEDUCT-RATE
-           COMPUTE WS-NET-SALARY = WS-GROSS-SALARY - WS-TAX-DEDUCTION - WS-LEAVE-DEDUCTION
-
-           MOVE WS-BASIC-SALARY TO BASIC-SALARY
-           MOVE OVERTIME-PAY TO OVERTIME-PAY
-           MOVE WS-GROSS-SALARY TO GROSS-SALARY
-           MOVE WS-TAX-DEDUCTION TO TAX-DEDUCTION
-           MOVE WS-LEAVE-DEDUCTION TO LEAVE-DEDUCTION
-           MOVE WS-NET-SALARY TO NET-SALARY.
-
-       300-WRITE-PAYSLIP.
-           OPEN OUTPUT PAYSLIP-FILE
-           MOVE WS-EMP-ID TO EMP-ID
-           WRITE PAYSLIP-RECORD
-           CLOSE PAYSLIP-FILE.
-
-       400-DISPLAY-PAYSLIP.
-           DISPLAY "---- Payslip for Employee: " WS-EMP-ID " ----"
-           DISPLAY "Basic Salary: R" BASIC-SALARY
-           DISPLAY "Overtime Pay: R" OVERTIME-PAY
-           DISPLAY "Bonus: R" BONUS-AMOUNT
-           DISPLAY "Gross Salary: R" GROSS-SALARY
-           DISPLAY "Tax Deducted: R" TAX-DEDUCTION
-           DISPLAY "Leave Deducted: R" LEAVE-DEDUCTION
-           DISPLAY "Net Salary: R" NET-SALARY
-           DISPLAY "Payslip saved to PAYSLIP.DAT".
+       PROCESS-PAYROLL.
+           *> Calculate Gross Salary
+           COMPUTE GROSS-SALARY = (HOURS-WORKED * HOURLY-RATE) + (OVERTIME-HOURS * HOURLY-RATE) + BONUS.
+           
+           *> Calculate UIF Deduction (1% of gross salary)
+           COMPUTE UIF-DEDUCTION = GROSS-SALARY * UIF-RATE.
+           
+           *> Calculate PAYE Deduction (South African tax calculation based on income)
+           IF GROSS-SALARY > PAYE-TAXABLE-THRESHOLD THEN
+               COMPUTE PAYE-DEDUCTION = (GROSS-SALARY - PAYE-TAXABLE-THRESHOLD) * PAYE-BRACKET-RATE
+           ELSE
+               COMPUTE PAYE-DEDUCTION = 0
+           END-IF.
+           
+           *> Calculate Pension Deduction (7% of gross salary)
+           COMPUTE PENSION-DEDUCTION = GROSS-SALARY * PENSION-CONTRIBUTION.
+           
+           *> Calculate Gross Pay (including deductions)
+           COMPUTE GROSS-PAY = GROSS-SALARY.
+           
+           *> Calculate Net Pay (after deductions)
+           COMPUTE NET-PAY = GROSS-SALARY - UIF-DEDUCTION - PAYE-DEDUCTION - PENSION-DEDUCTION.
+           
+           *> Display Payroll Information
+           DISPLAY "Employee ID: " EMP-ID
+                   " Name: " EMP-NAME
+                   " Gross Salary: " GROSS-SALARY
+                   " UIF Deduction: " UIF-DEDUCTION
+                   " PAYE Deduction: " PAYE-DEDUCTION
+                   " Pension Deduction: " PENSION-DEDUCTION
+                   " Net Pay: " NET-PAY.
+           
+           *> Move results back to file or process further as required
+           MOVE NET-PAY TO PAYROLL-RECORD.
+           *> Add additional logic to store or output results if necessary.
 
        END PROGRAM PAYROLL.
