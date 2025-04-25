@@ -1,234 +1,109 @@
-      *> Free format COBOL program
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. EMPLOYEE-MGMT.
+       PROGRAM-ID. PAYROLL.
        AUTHOR. BYTEBANK-DEV.
 
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT EMPLOYEE-FILE ASSIGN TO "data/employees.dat"
-              ORGANIZATION IS INDEXED
-              ACCESS MODE IS DYNAMIC
-              RECORD KEY IS EMP-ID
-              FILE STATUS IS FILE-STATUS-CODE.
+           SELECT PAYSLIP-FILE ASSIGN TO "PAYSLIP.DAT"
+               ORGANIZATION IS SEQUENTIAL
+               ACCESS MODE IS SEQUENTIAL
+               FILE STATUS IS WS-FILE-STATUS.
 
        DATA DIVISION.
        FILE SECTION.
-       FD EMPLOYEE-FILE.
-       01 EMPLOYEE-RECORD.
-           05 EMP-ID                    PIC 9(10).
-           05 EMP-NAME                  PIC X(50).
-           05 EMP-SURNAME               PIC X(50).
-           05 EMP-POSITION-TYPE         PIC X(20).
-           05 EMP-BIRTH.
-              10 EMP-BIRTH-YEAR         PIC X(4).
-              10 EMP-BIRTH-MONTH        PIC X(2).
-              10 EMP-BIRTH-DATE         PIC X(2).
-           05 EMP-AGE                   PIC 9(2).
-           05 EMP-UNION-FEE             PIC 9(5).
+       FD  PAYSLIP-FILE.
+       01  PAYSLIP-RECORD.
+           05  EMP-ID               PIC X(10).
+           05  BASIC-SALARY         PIC 9(6)V99.
+           05  OVERTIME-PAY         PIC 9(6)V99.
+           05  BONUS-AMOUNT         PIC 9(6)V99.
+           05  GROSS-SALARY         PIC 9(6)V99.
+           05  TAX-DEDUCTION        PIC 9(6)V99.
+           05  LEAVE-DEDUCTION      PIC 9(6)V99.
+           05  NET-SALARY           PIC 9(6)V99.
 
        WORKING-STORAGE SECTION.
-       01 WS-EMPLOYEE.
-           05 WS-EMP-ID                 PIC 9(10).
-           05 WS-EMP-NAME               PIC X(50).
-           05 WS-EMP-SURNAME            PIC X(50).
-           05 WS-EMP-POSITION-TYPE      PIC X(20).
-           05 WS-EMP-BIRTH.
-              10 WS-EMP-BIRTH-YEAR      PIC X(4).
-              10 WS-EMP-BIRTH-MONTH     PIC X(2).
-              10 WS-EMP-BIRTH-DATE      PIC X(2).
-           05 WS-EMP-AGE                PIC 9(2).
-           05 WS-EMP-UNION-FEE          PIC 9(5).
+       01  WS-FILE-STATUS           PIC XX.
+       01  WS-USER-ROLE             PIC X(1).
+       01  WS-EMP-ID                PIC X(10).
+       01  WS-BASIC-SALARY          PIC 9(6)V99 VALUE 0.
+       01  WS-HOURS-WORKED          PIC 9(3) VALUE 0.
+       01  WS-OVERTIME-HOURS        PIC 9(3) VALUE 0.
+       01  WS-BONUS                 PIC 9(6)V99 VALUE 0.
+       01  WS-LEAVE-DAYS            PIC 99 VALUE 0.
 
-       77 WS-EOF                        PIC X(1) VALUE 'N'.
-       77 USER-INPUT                    PIC X(1).
-       77 FILE-STATUS-CODE              PIC X(2).
-       77 FILE-EXISTS                   PIC X(1) VALUE 'N'.
-       01 WS-LOW-KEY                    PIC 9(10) VALUE ZEROS.
+       01  WS-HOURLY-RATE           PIC 9(4)V99 VALUE 100.00.
+       01  WS-OVERTIME-RATE         PIC 9(4)V99 VALUE 150.00.
+       01  WS-LEAVE-DEDUCT-RATE     PIC 9(4)V99 VALUE 100.00.
 
-       PROCEDURE DIVISION.
-       BEGIN.
-           PERFORM CHECK-FILE-EXISTS
-           IF FILE-EXISTS = 'N'
-              PERFORM CREATE-EMPLOYEE-LIST
-           END-IF
+       01  WS-TAX-RATE              PIC V9999 VALUE 0.1500.  *> 15%
+       01  WS-GROSS-SALARY          PIC 9(6)V99.
+       01  WS-TAX-DEDUCTION         PIC 9(6)V99.
+       01  WS-LEAVE-DEDUCTION       PIC 9(6)V99.
+       01  WS-NET-SALARY            PIC 9(6)V99.
 
-           PERFORM UNTIL USER-INPUT = "4"
-              DISPLAY "========== EMPLOYEE MANAGEMENT MODULE ============"
-              DISPLAY " "
-              DISPLAY "1. LIST ALL EMPLOYEES"
-              DISPLAY "2. ADD A NEW EMPLOYEE"
-              DISPLAY "3. SEARCH EMPLOYEE BY ID"
-              DISPLAY " "
-              DISPLAY "4. RETURN TO MAIN MENU"
-              DISPLAY " "
-              DISPLAY "CHOICE: " WITH NO ADVANCING 
-              ACCEPT USER-INPUT
+       LINKAGE SECTION.
+       01  LK-USER-ROLE             PIC X(1).
+       01  LK-EMP-ID                PIC X(10).
 
-              EVALUATE USER-INPUT
-                WHEN "1"
-                  PERFORM LIST-ALL-EMPLOYEES
-                WHEN "2"
-                  PERFORM ADD-NEW-EMPLOYEE
-                WHEN "3"
-                  PERFORM SEARCH-BY-ID
-                WHEN "4"
-                  EXIT PROGRAM
-                WHEN OTHER 
-                  DISPLAY "INVALID INPUT"
-              END-EVALUATE
-           END-PERFORM
+       PROCEDURE DIVISION USING LK-USER-ROLE LK-EMP-ID.
+       MAIN-PROCEDURE.
+           MOVE LK-USER-ROLE TO WS-USER-ROLE
+           MOVE LK-EMP-ID TO WS-EMP-ID
+
+           PERFORM 100-GET-EMPLOYEE-INPUT
+           PERFORM 200-CALCULATE-SALARY
+           PERFORM 300-WRITE-PAYSLIP
+           PERFORM 400-DISPLAY-PAYSLIP
+
            GOBACK.
 
-       CHECK-FILE-EXISTS.
-           OPEN INPUT EMPLOYEE-FILE
-           IF FILE-STATUS-CODE = "00"
-              CLOSE EMPLOYEE-FILE 
-              MOVE 'Y' TO FILE-EXISTS
-           ELSE
-              MOVE 'N' TO FILE-EXISTS
-           END-IF.
+       100-GET-EMPLOYEE-INPUT.
+           DISPLAY "Enter total hours worked: "
+           ACCEPT WS-HOURS-WORKED
 
-       CREATE-EMPLOYEE-LIST.
-           OPEN OUTPUT EMPLOYEE-FILE
-           DISPLAY "CREATING FILE"
-           IF FILE-STATUS-CODE = "00"
-              DISPLAY "FILE CREATED. code: " FILE-STATUS-CODE
-              CLOSE EMPLOYEE-FILE
-           ELSE
-              DISPLAY "ERROR CREATING FILE. code: " FILE-STATUS-CODE
-           END-IF.
+           DISPLAY "Enter overtime hours: "
+           ACCEPT WS-OVERTIME-HOURS
 
-       LIST-ALL-EMPLOYEES.
-           OPEN I-O EMPLOYEE-FILE
-           IF FILE-STATUS-CODE NOT = "00" AND FILE-STATUS-CODE NOT = "97"
-              DISPLAY "ERROR READING EMPLOYEES LIST. code: " FILE-STATUS-CODE
-              GOBACK
-           END-IF
+           DISPLAY "Enter bonus amount: "
+           ACCEPT WS-BONUS
 
-           DISPLAY " "
-           DISPLAY "BYTEBANK EMPLOYEES"
-           DISPLAY " "
-           
-           MOVE WS-LOW-KEY TO EMP-ID
-           START EMPLOYEE-FILE KEY >= EMP-ID
-               INVALID KEY 
-                   DISPLAY "NO RECORDS FOUND"
-                   MOVE 'Y' TO WS-EOF
-           END-START
-             
-           PERFORM UNTIL WS-EOF = 'Y'
-              READ EMPLOYEE-FILE NEXT RECORD 
-                 AT END 
-                    MOVE 'Y' TO WS-EOF
-                    DISPLAY " "
-                    DISPLAY "||||||||||||||||||||||||||||||||||||||||||||||"
-                    DISPLAY "                END OF FILE"
-                    DISPLAY "||||||||||||||||||||||||||||||||||||||||||||||"
-                    DISPLAY " "
-                 NOT AT END
-                    DISPLAY " "
-                    DISPLAY "============================================="
-                    DISPLAY "ID: " EMP-ID
-                    DISPLAY "NAME: " EMP-NAME
-                    DISPLAY "SURNAME: " EMP-SURNAME
-                    DISPLAY "POSITION: " EMP-POSITION-TYPE
-                    DISPLAY "BIRTHDATE: " EMP-BIRTH-DATE
-                    DISPLAY "AGE: " EMP-AGE
-                    DISPLAY "UNION FEE: " EMP-UNION-FEE
-                    DISPLAY "============================================="
-              END-READ
-           END-PERFORM
-           CLOSE EMPLOYEE-FILE.
+           DISPLAY "Enter unpaid leave days: "
+           ACCEPT WS-LEAVE-DAYS.
 
-       ADD-NEW-EMPLOYEE.
-           OPEN I-O EMPLOYEE-FILE
-           DISPLAY "ENTER EMPLOYEE'S FIRST NAME: " WITH NO ADVANCING 
-           ACCEPT WS-EMP-NAME
+       200-CALCULATE-SALARY.
+           COMPUTE WS-BASIC-SALARY = WS-HOURS-WORKED * WS-HOURLY-RATE
+           COMPUTE OVERTIME-PAY = WS-OVERTIME-HOURS * WS-OVERTIME-RATE
+           MOVE WS-BONUS TO BONUS-AMOUNT
 
-           DISPLAY "ENTER EMPLOYEE'S SURNAME: " WITH NO ADVANCING 
-           ACCEPT WS-EMP-SURNAME
+           COMPUTE WS-GROSS-SALARY = WS-BASIC-SALARY + OVERTIME-PAY + BONUS-AMOUNT
+           COMPUTE WS-TAX-DEDUCTION = WS-GROSS-SALARY * WS-TAX-RATE
+           COMPUTE WS-LEAVE-DEDUCTION = WS-LEAVE-DAYS * WS-LEAVE-DEDUCT-RATE
+           COMPUTE WS-NET-SALARY = WS-GROSS-SALARY - WS-TAX-DEDUCTION - WS-LEAVE-DEDUCTION
 
-           DISPLAY "ENTER EMPLOYEE'S POSITION TYPE (INTERN, "
-              "INTERMEDIATE, SENIOR): " WITH NO ADVANCING 
-           ACCEPT WS-EMP-POSITION-TYPE
+           MOVE WS-BASIC-SALARY TO BASIC-SALARY
+           MOVE OVERTIME-PAY TO OVERTIME-PAY
+           MOVE WS-GROSS-SALARY TO GROSS-SALARY
+           MOVE WS-TAX-DEDUCTION TO TAX-DEDUCTION
+           MOVE WS-LEAVE-DEDUCTION TO LEAVE-DEDUCTION
+           MOVE WS-NET-SALARY TO NET-SALARY.
 
-           DISPLAY "ENTER EMPLOYEE'S BIRTH YEAR (YYYY): " WITH NO ADVANCING   
-           ACCEPT WS-EMP-BIRTH-YEAR
-
-           DISPLAY "ENTER EMPLOYEE'S BIRTH MONTH (MM): " WITH NO ADVANCING 
-           ACCEPT WS-EMP-BIRTH-MONTH
-
-           DISPLAY "ENTER EMPLOYEE'S BIRTH DATE (DD): " WITH NO ADVANCING 
-           ACCEPT WS-EMP-BIRTH-DATE
-
-           DISPLAY "ENTER EMPLOYEE'S AGE: " WITH NO ADVANCING 
-           ACCEPT WS-EMP-AGE
-
-           DISPLAY "(OPTIONAL) ENTER EMPLOYEE'S UNION FEE: " WITH NO ADVANCING 
-           ACCEPT WS-EMP-UNION-FEE
-
-           MOVE WS-EMP-NAME TO EMP-NAME
-           MOVE WS-EMP-SURNAME TO EMP-SURNAME
-           MOVE WS-EMP-POSITION-TYPE TO EMP-POSITION-TYPE
-           MOVE WS-EMP-BIRTH-YEAR TO EMP-BIRTH-YEAR
-           MOVE WS-EMP-BIRTH-MONTH TO EMP-BIRTH-MONTH
-           MOVE WS-EMP-BIRTH-DATE TO EMP-BIRTH-DATE
-           MOVE WS-EMP-AGE TO EMP-AGE
-           MOVE WS-EMP-UNION-FEE TO EMP-UNION-FEE
-
-           WRITE EMPLOYEE-RECORD
-              INVALID KEY
-                 DISPLAY WS-EMP-ID
-                 DISPLAY WS-EMP-NAME " ALREADY EXISTS!"
-              NOT INVALID KEY
-                 DISPLAY EMP-NAME " HAS BEEN SUCCESSFULLY ADDED."
-           END-WRITE
-           CLOSE EMPLOYEE-FILE.
-
-       SEARCH-BY-ID.
-           INITIALIZE WS-EMP-ID
-           DISPLAY "ID: " WS-EMP-ID
-           INITIALIZE WS-EMP-NAME
-           INITIALIZE WS-EMP-SURNAME
-           INITIALIZE WS-EMP-POSITION-TYPE
-           INITIALIZE WS-EMP-BIRTH-DATE
-           INITIALIZE WS-EMP-AGE
-           INITIALIZE WS-EMP-UNION-FEE
-
-           OPEN I-O EMPLOYEE-FILE
-           DISPLAY "==================================================="
-           DISPLAY "                     SEARCH                        "
-           DISPLAY "==================================================="
-
-           IF FILE-STATUS-CODE NOT = "00" AND FILE-STATUS-CODE NOT = "97"
-              DISPLAY "ERROR READING FILE. code: " FILE-STATUS-CODE
-              CLOSE EMPLOYEE-FILE
-              GOBACK
-           END-IF
-
-           DISPLAY "ENTER EMPLOYEE ID: " WITH NO ADVANCING 
-           ACCEPT WS-EMP-ID
-
+       300-WRITE-PAYSLIP.
+           OPEN OUTPUT PAYSLIP-FILE
            MOVE WS-EMP-ID TO EMP-ID
+           WRITE PAYSLIP-RECORD
+           CLOSE PAYSLIP-FILE.
 
-           READ EMPLOYEE-FILE INTO EMPLOYEE-RECORD
-              KEY IS EMP-ID
-              INVALID KEY
-                 DISPLAY "EMPLOYEE NOT FOUND!"
-              NOT INVALID KEY 
-                 DISPLAY " "
-                 DISPLAY "============================================="
-                 DISPLAY "ID: " EMP-ID
-                 DISPLAY "NAME: " EMP-NAME
-                 DISPLAY "SURNAME: " EMP-SURNAME
-                 DISPLAY "POSITION: " EMP-POSITION-TYPE
-                 DISPLAY "BIRTHDATE: " EMP-BIRTH-DATE
-                 DISPLAY "AGE: " EMP-AGE
-                 DISPLAY "UNION FEE: " EMP-UNION-FEE
-                 DISPLAY "============================================="
-                 DISPLAY " "
-           END-READ
-           CLOSE EMPLOYEE-FILE.
+       400-DISPLAY-PAYSLIP.
+           DISPLAY "---- Payslip for Employee: " WS-EMP-ID " ----"
+           DISPLAY "Basic Salary: R" BASIC-SALARY
+           DISPLAY "Overtime Pay: R" OVERTIME-PAY
+           DISPLAY "Bonus: R" BONUS-AMOUNT
+           DISPLAY "Gross Salary: R" GROSS-SALARY
+           DISPLAY "Tax Deducted: R" TAX-DEDUCTION
+           DISPLAY "Leave Deducted: R" LEAVE-DEDUCTION
+           DISPLAY "Net Salary: R" NET-SALARY
+           DISPLAY "Payslip saved to PAYSLIP.DAT".
 
-       END PROGRAM EMPLOYEE-MGMT.
+       END PROGRAM PAYROLL.

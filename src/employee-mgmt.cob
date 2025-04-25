@@ -1,6 +1,6 @@
-       IDENTIFICATION DIVISION.
+IDENTIFICATION DIVISION.
        PROGRAM-ID. EMPLOYEE-MGMT.
-       AUTHOR. YOUR-NAME.
+       AUTHOR. SISAMKELE VAVA.
 
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
@@ -70,7 +70,7 @@
                WHEN "00"
                    CLOSE EMPLOYEE-FILE
                    MOVE 'Y' TO FILE-EXISTS
-               WHEN "02"
+               WHEN "35"
                    DISPLAY "File not found. Creating new employee list..."
                    MOVE 'N' TO FILE-EXISTS
                WHEN OTHER
@@ -84,16 +84,22 @@
 
        LIST-ALL-EMPLOYEES.
            OPEN INPUT EMPLOYEE-FILE
+           READ EMPLOYEE-FILE INTO EMPLOYEE-RECORD
+               AT END
+                   DISPLAY "NO EMPLOYEE RECORDS FOUND."
+                   CLOSE EMPLOYEE-FILE
+                   EXIT PARAGRAPH
+           END-READ
+
            PERFORM UNTIL FILE-STATUS-CODE = "10"
+               DISPLAY "ID: " EMP-ID
+               DISPLAY "Name: " EMP-FIRST-NAME " " EMP-LAST-NAME
+               DISPLAY "Position: " EMP-POSITION-TYPE
+               DISPLAY "Birth Date: " EMP-BIRTH-DATE
+               DISPLAY "Union Fee: " EMP-UNION-FEE
                READ EMPLOYEE-FILE INTO EMPLOYEE-RECORD
                    AT END
-                       DISPLAY "END OF FILE REACHED."
-                   NOT AT END
-                       DISPLAY "ID: " EMP-ID
-                       DISPLAY "Name: " EMP-FIRST-NAME " " EMP-LAST-NAME
-                       DISPLAY "Position: " EMP-POSITION-TYPE
-                       DISPLAY "Birth Date: " EMP-BIRTH-DATE
-                       DISPLAY "Union Fee: " EMP-UNION-FEE
+                       EXIT PERFORM
                END-READ
            END-PERFORM
            CLOSE EMPLOYEE-FILE.
@@ -104,14 +110,19 @@
                PERFORM INPUT-EMPLOYEE-DATA
                PERFORM CALCULATE-SALARY
                DISPLAY "EMPLOYEE ADDED SUCCESSFULLY"
-               OPEN OUTPUT EMPLOYEE-FILE
+               OPEN EXTEND EMPLOYEE-FILE
+               MOVE WS-EMP-ID           TO EMP-ID
+               MOVE WS-EMP-FIRST-NAME   TO EMP-FIRST-NAME
+               MOVE WS-EMP-LAST-NAME    TO EMP-LAST-NAME
+               MOVE WS-EMP-POSITION-TYPE TO EMP-POSITION-TYPE
+               MOVE WS-EMP-BIRTH-DATE   TO EMP-BIRTH-DATE
+               MOVE WS-EMP-UNION-FEE    TO EMP-UNION-FEE
                WRITE EMPLOYEE-RECORD
                IF FILE-STATUS-CODE NOT = "00"
                    DISPLAY "ERROR WRITING EMPLOYEE RECORD. File Status: " FILE-STATUS-CODE
                END-IF
                CLOSE EMPLOYEE-FILE
            END-IF.
-
 
        SEARCH-BY-ID.
            DISPLAY "Enter employee ID to search: "
@@ -121,6 +132,7 @@
                READ EMPLOYEE-FILE INTO EMPLOYEE-RECORD
                    AT END
                        DISPLAY "EMPLOYEE NOT FOUND."
+                       EXIT PERFORM
                    NOT AT END
                        IF EMP-ID = WS-EMP-ID
                            DISPLAY "Employee ID: " EMP-ID
@@ -128,6 +140,7 @@
                            DISPLAY "Position: " EMP-POSITION-TYPE
                            DISPLAY "Birth Date: " EMP-BIRTH-DATE
                            DISPLAY "Union Fee: " EMP-UNION-FEE
+                           EXIT PERFORM
                        END-IF
                END-READ
            END-PERFORM
@@ -138,7 +151,7 @@
            PERFORM UNTIL WS-VALID-TYPE = 'Y'
                DISPLAY "ENTER EMPLOYEE'S ID (5 DIGITS): " WITH NO ADVANCING
                ACCEPT WS-EMP-ID
-               IF FUNCTION NUMVAL (WS-EMP-ID) > 0 AND LENGTH OF WS-EMP-ID = 5
+               IF FUNCTION NUMVAL (WS-EMP-ID) > 0 AND FUNCTION LENGTH (WS-EMP-ID) = 5
                    MOVE 'Y' TO WS-VALID-TYPE
                ELSE
                    DISPLAY "INVALID EMPLOYEE ID. Please enter a 5-digit numeric ID."
